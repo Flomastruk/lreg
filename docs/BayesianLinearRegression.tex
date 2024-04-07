@@ -58,6 +58,7 @@
 \newcommand{\bbeta}{\boldsymbol{\beta}}
 \newcommand{\mmu}{\boldsymbol{\mu}}
 \newcommand{\SSigma}{\boldsymbol{\Sigma}}
+\newcommand{\llambda}{\boldsymbol{\lambda}}
 \newcommand{\LLambda}{\boldsymbol{\Lambda}}
 \newcommand{\Var}{\boldsymbol{V}}
 \newcommand{\XTX}{X^TX}
@@ -69,6 +70,7 @@
 \begin{document}
 \title{Bayesian Linear Regression}
 \author{Efim Abrikosov}
+\date{\today}
 \maketitle
 
 \section{Framework}
@@ -95,7 +97,7 @@
     with parameters $(a_0, b_0)$, and conditional distribution for linear relation weights $f(\bbeta\mid\sigma^2)=\mathcal{N}(\mmu,\sigma^2\SSigma)$
 \end{enumerate}
 
-\section{Known Observation Variance with Linear Weights Prior}
+\section{Gaussian Prior with Known Variance}
 \subsection{Summary of Results}
 \begin{proposition}[Posterior paramer distribution with known variance]\label{posterior}
     The posterior distribution of model parameters is normal $f(\bbeta\mid X,Y)=\mathcal{N}(\mmu_1, \sigma^2\SSigma_1)$
@@ -146,7 +148,7 @@ This follows immediately from the lemma on completing squares:
 \noindent To find the posterior predictive distribution \ref{posterior_y}, we integrate out parameter $\bbeta$:
 \begin{equation*}\begin{split}
 f(y\mid x, X, Y)=\int\displaylimits_{\bbeta\in\RR^k}f(y\mid x,X,Y,\bbeta)&f(\bbeta\mid X,Y)d\bbeta=\\
-=\int\displaylimits_{\bbeta\in\RR^k}&-\frac {\det \LLambda_1}{\left(2\pi\sigma^2\right)^{\frac{1+k}2}}
+=\int\displaylimits_{\bbeta\in\RR^k}&-\frac {\left(\det\LLambda_1\right)^{\frac 12}}{\left(2\pi\sigma^2\right)^{\frac{1+k}2}}
 \exp\left(-\frac 1{2\sigma^2}\left((y-x\beta)^2+(\bbeta-\mmu_1)^T\LLambda_1(\bbeta-\mmu_1)\right)\right)d\bbeta
 \end{split}\end{equation*}
 Set $\widetilde{\bbeta}\eq\bbeta-\mmu_1$ and $\widetilde{y}\eq y-x\mmu_1$. The expession under the exponential can be rewritten as:
@@ -173,12 +175,16 @@ The second equality above follows from \href{https://en.wikipedia.org/wiki/Sherm
         v^T\left(A+uv^T\right)^{-1}u=\frac{v^TA^{-1}u}{1+v^TA^{-1}u}
     \end{align}
 \end{theorem}
-The proof of \ref{posterior_y1} may be seen as a direct consequence of general result on convolution of multivariate normal distributions.
-The result is well-known and is usually demonstrated using Fourier transform. We give an ``elementary'' proof in the appendix
+The proof of \ref{posterior_y1} may be seen as a direct consequence of the general result on convolution of multivariate normal distributions.
+The result is well-known and is usually demonstrated using Fourier transform.
+We give an ``elementary'' proof in Appendix \ref{appendix_gauss_conv}
 \end{proof}
 \begin{proof}[Proof of Proposition \ref{uninform}]
 Straightforward by substituting $\mmu_0=0$ and $\SSigma_0^{-1}=0$ in propositions \ref{posterior} and \ref{posterior_pred}
 \end{proof}
+
+
+\section{Variance Scale Inverse Gamma Prior}
 
 
 \section{Conjugate Priors For Observation Variance and Linear Weights}
@@ -224,5 +230,26 @@ Posterior observation distribution $\widehat y \equiv x\cdot\bbeta + e$:
 \end{equation}
 
 
+\appendix\section{``Elementary'' Proof of Gaussian Convolution}\label{appendix_gauss_conv}
+% next \section will use \appendix counter
+\begin{proposition}
+    Let $\bbeta\in\RR^k$ be a gaussian vector with distribution $\mathcal{N}(\mmu,\SSigma)$ and let $A$ be any $l\times k$ matrix.
+    Then $A\bbeta\in\RR^k$ is a gaussian vector with distribution $\mathcal{N}(A\mmu,A\SSigma A^T)$
+\end{proposition}
+\begin{proof} We only consider the case $l=1$ with $A=a=(a_1, a_2,\ldots, a_k)$ is and $A\bbeta$ is a one dimensional random variable.
+Without loss of generality we may assume $a_1\neq 0$. Introduce notations:
+\begin{align}
+    &\bbeta = \left(\beta_1,\ \bbeta_{-1}^T\right)^T,\ \beta_1\in\RR^k,\ \bbeta_{-1}\in\RR^{k-1}\\
+    &\widetilde{\bbeta}=\left(\widetilde{\bbeta}_1,\ \widetilde{\bbeta}_{-1}^T\right)^T=\bbeta-\mmu\\
+    &\yhat = a\bbeta\\
+    &\widetilde{y}=\yhat-a\mmu\\
+    &\LLambda=\SSigma^{-1}\\
+    &\LLambda=\left(\begin{matrix}
+        \lambda_1 && \llambda_1\\
+        \llambda_1^T && \LLambda_{-1}
+    \end{matrix}\right)
+\end{align}
+We note that the volume element $d\bbeta=d\beta_1d\bbeta_{-1}=d\left(\frac{\yhat-}{a_1}\right)d\bbeta_{-1}$
+\end{proof}
 
 \end{document}
