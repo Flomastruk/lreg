@@ -1,15 +1,22 @@
-\documentclass[12pt]{article}
+% \documentclass[12pt]{article}
+\documentclass[10pt,fleqn]{amsart}
 \usepackage{amssymb,amsmath,amsthm}
-\usepackage{mathtools}
-
-\usepackage{wrapfig, tikz, tikz-cd}
-\usetikzlibrary{arrows, arrows, calc, decorations.markings, automata,calc}
-
-\usepackage{xcolor}
+\usepackage{enumitem}
 \usepackage{hyperref}
-\hypersetup{colorlinks=false,linkbordercolor=red,linkcolor=green,pdfborderstyle={/S/U/W 2}}
-
+\usepackage{mathtools}
+% \usepackage{mathrsfs}
 \usepackage{url}
+
+\setlength{\textwidth}{\paperwidth}
+\addtolength{\textwidth}{-1.5in}
+\calclayout
+
+
+% \usepackage{wrapfig, tikz, tikz-cd}
+% \usetikzlibrary{arrows, arrows, calc, decorations.markings, automata,calc}
+
+% \usepackage{xcolor}
+% \hypersetup{colorlinks=false,linkbordercolor=red,linkcolor=green,pdfborderstyle={/S/U/W 2}}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{proposition}[theorem]{Proposition}
@@ -25,33 +32,38 @@
 \newtheorem{remark}[theorem]{Remark}
 \numberwithin{equation}{section}
 
-\newcommand{\dd}{\partial}
-\newcommand{\argmax}{\operatorname{argmax}}
-\newcommand{\Span}{\operatorname{Span}}
-\newcommand{\RR}{\mathbb{R}}
-\newcommand{\KK}{\mathbb{K}}
-\newcommand{\rr}{\text{r}}
 \newcommand{\al}{\alpha}
 \newcommand{\be}{\beta}
 \newcommand{\eps}{\varepsilon}
 \newcommand{\ph}{\varphi}
-\newcommand{\PP}{\mathbb{P}}
-\newcommand{\ZZ}{\mathbb{Z}}
-\newcommand{\NN}{\mathbb{N}}
+\newcommand{\argmax}{\operatorname{argmax}}
+\newcommand{\Span}{\operatorname{Span}}
 \newcommand{\BB}{\mathfrak{B}}
-\newcommand{\bbeta}{\boldsymbol{\beta}}
-\newcommand{\SSigma}{\boldsymbol{\Sigma}}
 \newcommand{\CC}{\mathbb{C}}
-\newcommand{\MM}{\mathfrak{M}}
-\newcommand{\kk}{\textbf{k}}
 \newcommand{\EE}{\mathbb{E}}
-\newcommand{\VV}{\mathbb{V}}
 \newcommand{\II}{\mathbb{I}}
+\newcommand{\kk}{\textbf{k}}
+\newcommand{\KK}{\mathbb{K}}
+\newcommand{\MM}{\mathfrak{M}}
+\newcommand{\VV}{\mathbb{V}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\rr}{\text{r}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+
 \newcommand{\eq}{\stackrel{\mathclap{\normalfont\text{def}}}{=}}
 \newcommand{\convas}{\stackrel{\mathclap{\normalfont\text{as}}}{\longrightarrow}}
-
+\newcommand{\const}{\text{const}}
+\newcommand{\bbeta}{\boldsymbol{\beta}}
+\newcommand{\mmu}{\boldsymbol{\mu}}
+\newcommand{\SSigma}{\boldsymbol{\Sigma}}
+\newcommand{\LLambda}{\boldsymbol{\Lambda}}
+\newcommand{\Var}{\boldsymbol{V}}
 \newcommand{\XTX}{X^TX}
+\newcommand{\XTY}{X^TY}
 \newcommand{\XTXi}{\left(X^TX\right)^{-1}}
+\newcommand{\yhat}{\widehat{y}}
 \newcommand{\invGamma}{\text{Inv-}\Gamma}
 
 \begin{document}
@@ -61,7 +73,6 @@
 
 \section{Framework}
 \subsection{Notations}
-
 \begin{equation}\label{linear}
     y = x\cdot \bbeta +\varepsilon,\ \varepsilon \sim\mathcal{N}(0,\sigma^2)
 \end{equation}
@@ -69,29 +80,86 @@
 \begin{enumerate}
     \item Individual observations $(x, y) \in \RR^k\times \RR$
     \item Observed data $(X, Y)\in \RR^{n\times k}\times \RR^n$
-    \item Linear regression weights $\bbeta \in \RR^k$ 
+    \item Linear regression weights  $\bbeta \in \RR^k$
+    \item Model parameter distribution mean $\mmu \in \RR^k$ and covariance matrix $\SSigma \in \RR^{k\times k}$
     \item Observation error variance $\sigma^2$
 \end{enumerate}
 
 \subsection{Model Assumptions}
 \begin{enumerate}
-    \item Observations $X$ have full rank
+    \item Observations $(x, y)$ satisfy linear relation \ref{linear}
     \item Observation errors are independent, normally distributed with
     mean zero and variance $\sigma^2$
-    \item Relation \ref{linear} holds
-    \item Error variance $\sigma^2$ is either known, or its prior distribution
-    is inverse gamma distribution with parameters $a_0,\ b_0$
-    \item $\bbeta$ has a conditional prior distribution
-    $\beta\mid\sigma^2\sim\mathcal{N}(\bbeta_0,\sigma^2\SSigma_0)$
+    \item For posterior estimation, observations $X$ must have full rank
+    \item For known error variance $\sigma^2$, the prior on the space of parameters $\bbeta\in\RR^k$ is $\mathcal{N}(\mmu,\sigma^2\SSigma)$
+    \item For unknown error variance, the prior for $(\bbeta, \sigma^2)\in\RR^{k+1}$ has $\sigma^2$ following
+    inverse gamma distribution with parameters $(a_0, b_0)$, and conditional distribution for linear relation weights $f(\bbeta\mid\sigma^2)=\mathcal{N}(\mmu,\sigma^2\SSigma)$
 \end{enumerate}
 
 \section{Known Observation Variance with Linear Weights Prior}
 \subsection{Summary of Results}
-Posterior distribution of $\bbeta$:
+\begin{proposition}[Posterior Paramer Distribution with Known Variance]
+    The posterior distribution of model parameters is normal $f(\bbeta\mid X,Y)=\mathcal{N}(\mmu_1, \sigma^2\SSigma_1)$
+    with parameters:
+    \begin{align}
+        \label{posterior_mu}&\SSigma_1^{-1}=\SSigma_0^{-1}+\XTX&&\\
+        \label{posterior_mu1}&\mu_1=\SSigma_1\left(\XTX \widehat\bbeta + \SSigma_0^{-1}\mu_0\right)&&\\
+        \label{posterior_mu2}&\widehat{\bbeta}=\XTXi X^TY&&
+    \end{align}
+\end{proposition}
+\begin{proposition}[Posterior Predictive Distribution with Known Variance]
+    For an observation $(x, y)$ and its expectation $(x, \yhat\eq x\cdot\bbeta)$,
+    posterior conditional distributions of $y$ and $\yhat$ are normal with parameters given below
+    \begin{align}
+        \label{posterior_y}&f(y\mid x, X, Y)=\mathcal{N}\left(x\mmu_1, \sigma^2\left(1+x\XTXi x^T\right)\right)&&\\
+        \label{posterior_y1}&f(\widehat y\mid x, X, Y)=\mathcal{N}\left(x\mmu_1, \sigma^2 x\XTXi x^T\right)&&
+    \end{align}
+    In particular, the variance of predictive distributions does not depend on $\SSigma_0$.
+\end{proposition}
+\begin{proposition}[Bayesian Regresssion under Known Vairance and Uninformative Prior]
+    If the prior parameter $\bbeta$ distribution is uninformative, i.e. $\mmu_0=0$ and $\SSigma_0^{-1}=0$,
+    then posterior distribution of model parameters recovers standard OLS formulas:
+    \begin{equation}\begin{split}\label{uninform}
+        &\bbeta\sim\mathcal{N}\left(\mmu_1,\sigma^2\XTXi\right) \\
+        &\mmu_1=\XTXi\XTY
+    \end{split}\end{equation}
+    In addition, posterior predictive distributions \ref{posterior_y} and \ref{posterior_y1} coincide with standard OLS formulas.
+\end{proposition}
+\begin{proof}
+Define for convenience $\LLambda_0\eq\SSigma_0^{-1}$. Using $f(\beta\mid X, Y)\propto f(X, Y\mid \bbeta)f(\bbeta)$ and taking logarithms one has:
+\begin{equation*}\begin{split}
+    \ln f(\bbeta\mid X, Y)+\const=-\left(\frac n 2 \ln{\sigma^2}+\frac n 2\ln 2\pi+\frac 1 2 \ln \SSigma_0+\frac k 2 \ln 2\pi\right)-&&\\
+    -\frac 1{2\sigma^2}(Y-X\bbeta)^T(Y-X\bbeta)-\frac 1{2\sigma^2}(\bbeta-\mmu_0)^T\LLambda_0(\bbeta -&&\mmu_0)=\\
+    =-\left(\frac n 2\ln{\sigma^2}+\frac n 2\ln 2\pi+\frac 1 2 \ln \SSigma_0+\frac k 2 \ln 2\pi\right)-&&\\
+    -\frac 1{2\sigma^2}\left(\bbeta^T\left(X^TX+\LLambda_0\right)\bbeta-(Y^TX+\mmu_0^T\LLambda_0)\bbeta-
+    \bbeta^T\left(X^TY+\LLambda_0\mmu_0\right)+Y^TY+\mmu_0^T\LLambda_0\mmu_0\right)&&
+\end{split}\end{equation*}
+It suffices to show that this expression is a quadratic form $-\frac 1 {2\sigma^2}(\bbeta-\mmu_1)^T\LLambda_1(\bbeta-\mmu_1)$
+up to an additive term independent of $\bbeta$. Here $\mmu_1$ and $\LLambda_1$ are as in \ref{posterior_mu}-\ref{posterior_mu2}.
+This follows immediately from the lemma on completing squares:
+\begin{lemma}\label{lemmaQ}
+    For any symmetric quadratic form $Q$, liner form $L$ and vector $v$
+    \begin{equation*}
+        v^TQv-v^TL-L^Tv=(v-Q^{-1}L)^TQ(v-Q^{-1}L)-L^TQ^{-1}L
+    \end{equation*}
+\end{lemma}
+To find the posterior predictive distribution \ref{posterior_y}, we integrate out parameter $\bbeta$:
+\begin{equation*}
+\int\displaylimits_{\bbeta\in\RR^k}f(y\mid x,X,Y,\bbeta)f(\bbeta\mid X,Y)d\bbeta=\int\displaylimits_{\bbeta\in\RR^k}
+-\frac {\det \LLambda_1}{\left(2\pi\sigma^2\right)^{\frac{1+k}2}}\exp\left(-\frac 1{2\sigma^2}\left((y-x\beta)^2+(\bbeta-\mmu_1)^T\LLambda_1(\bbeta-\mmu_1)\right)\right)d\bbeta
+\end{equation*}
+\end{proof}
+
+
+
+
+
+
+Posterior distribution $f(\bbeta\mid Y,X)=\mathcal{N}(\mmu_1, \sigma^2\SSigma_1)$:
 \begin{flalign}
-    \label{posterior_beta0}&f(\bbeta\mid Y,X)=\mathcal{N}(\bbeta_1, \sigma^2\SSigma_1)&&\\
+    \label{posterior_beta0}&f(\bbeta\mid Y,X)=\mathcal{N}(\mmu_1, \sigma^2\SSigma_1)&&\\
     &\SSigma_1^{-1}=\SSigma_0^{-1}+\XTX &&\\
-    &\bbeta_1=\SSigma_1\left(\XTX \widehat\bbeta + \SSigma_0^{-1}\bbeta_0\right)&&\\
+    &\mu_1=\SSigma_1\left(\XTX \widehat\bbeta + \SSigma_0^{-1}\mu_0\right)&&\\
     &\widehat{\bbeta}=\XTXi X^TY&&
 \end{flalign}
 Posterior prediction distribution $\widehat y \equiv x\cdot\bbeta$:
@@ -167,6 +235,7 @@ Posterior observation distribution $\widehat y \equiv x\cdot\bbeta + e$:
 \begin{equation}\label{posterior_obs}
     f(y\mid Y, X, x)=??
 \end{equation}
+
 
 
 \end{document}
