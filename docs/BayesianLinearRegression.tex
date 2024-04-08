@@ -32,26 +32,27 @@
 \newtheorem{remark}[theorem]{Remark}
 \numberwithin{equation}{section}
 
-\newcommand{\al}{\alpha}
-\newcommand{\be}{\beta}
-\newcommand{\eps}{\varepsilon}
-\newcommand{\ph}{\varphi}
-\newcommand{\argmax}{\operatorname{argmax}}
+% \newcommand{\al}{\alpha}
+% \newcommand{\be}{\beta}
+% \newcommand{\eps}{\varepsilon}
+% \newcommand{\ph}{\varphi}
 \newcommand{\Span}{\operatorname{Span}}
+\newcommand{\aaa}{\boldsymbol{a}}
 \newcommand{\BB}{\mathfrak{B}}
 \newcommand{\CC}{\mathbb{C}}
 \newcommand{\EE}{\mathbb{E}}
 \newcommand{\II}{\mathbb{I}}
-\newcommand{\kk}{\textbf{k}}
+% \newcommand{\kk}{\textbf{k}}
 \newcommand{\KK}{\mathbb{K}}
 \newcommand{\MM}{\mathfrak{M}}
 \newcommand{\VV}{\mathbb{V}}
 \newcommand{\NN}{\mathbb{N}}
 \newcommand{\PP}{\mathbb{P}}
-\newcommand{\rr}{\text{r}}
+% \newcommand{\rr}{\text{r}}
 \newcommand{\RR}{\mathbb{R}}
 \newcommand{\ZZ}{\mathbb{Z}}
 
+\newcommand{\argmax}{\operatorname{argmax}}
 \newcommand{\eq}{\stackrel{\mathclap{\normalfont\text{def}}}{=}}
 \newcommand{\convas}{\stackrel{\mathclap{\normalfont\text{as}}}{\longrightarrow}}
 \newcommand{\const}{\text{const}}
@@ -64,7 +65,10 @@
 \newcommand{\XTX}{X^TX}
 \newcommand{\XTY}{X^TY}
 \newcommand{\XTXi}{\left(X^TX\right)^{-1}}
+\newcommand{\bbetahat}{\widehat{\bbeta}}
+\newcommand{\bbetatilde}{\widetilde{\bbeta}}
 \newcommand{\yhat}{\widehat{y}}
+\newcommand{\ytilde}{\widetilde{y}}
 \newcommand{\invGamma}{\text{Inv-}\Gamma}
 
 \begin{document}
@@ -105,7 +109,7 @@
     \begin{align}
         \label{posterior_mu}&\SSigma_1^{-1}=\SSigma_0^{-1}+\XTX&&\\
         \label{posterior_mu1}&\mu_1=\SSigma_1\left(\XTX \widehat\bbeta + \SSigma_0^{-1}\mu_0\right)&&\\
-        \label{posterior_mu2}&\widehat{\bbeta}=\XTXi X^TY&&
+        \label{posterior_mu2}&\bbetahat=\XTXi X^TY&&
     \end{align}
 \end{proposition}
 \begin{proposition}[Posterior predictive distribution with known variance]\label{posterior_pred}
@@ -151,21 +155,21 @@ f(y\mid x, X, Y)=\int\displaylimits_{\bbeta\in\RR^k}f(y\mid x,X,Y,\bbeta)&f(\bbe
 =\int\displaylimits_{\bbeta\in\RR^k}&-\frac {\left(\det\LLambda_1\right)^{\frac 12}}{\left(2\pi\sigma^2\right)^{\frac{1+k}2}}
 \exp\left(-\frac 1{2\sigma^2}\left((y-x\beta)^2+(\bbeta-\mmu_1)^T\LLambda_1(\bbeta-\mmu_1)\right)\right)d\bbeta
 \end{split}\end{equation*}
-Set $\widetilde{\bbeta}\eq\bbeta-\mmu_1$ and $\widetilde{y}\eq y-x\mmu_1$. The expession under the exponential can be rewritten as:
+Set $\bbetatilde\eq\bbeta-\mmu_1$ and $\ytilde\eq y-x\mmu_1$. The expession under the exponential can be rewritten as:
 \begin{equation*}\begin{split}
     (y-x&\beta)^2+(\bbeta-\mmu_1)^T\LLambda_1(\bbeta-\mmu_1)=
-    \left(\widetilde{y}-x\widetilde{\bbeta}\right)^2+\widetilde{\bbeta}^T\LLambda_1\widetilde{\bbeta}=\\
-    &=\widetilde{y}^2-\widetilde{y}x\left(\LLambda_1+x^Tx\right)^{-1}x^T\widetilde{y}+
-    \left(\widetilde{\bbeta}-\left(\LLambda_1+x^Tx\right)^{-1}x^T\widetilde{y}\right)^T\left(\LLambda_1+x^Tx\right)
-    \left(\widetilde{\bbeta}-\left(\LLambda_1+x^Tx\right)^{-1}x^T\widetilde{y}\right)
+    \left(\ytilde-x\bbetatilde\right)^2+\bbetatilde^T\LLambda_1\bbetatilde=\\
+    &=\ytilde^2-\ytilde x\left(\LLambda_1+x^Tx\right)^{-1}x^T\ytilde+
+    \left(\bbetatilde-\left(\LLambda_1+x^Tx\right)^{-1}x^T\ytilde\right)^T\left(\LLambda_1+x^Tx\right)
+    \left(\bbetatilde-\left(\LLambda_1+x^Tx\right)^{-1}x^T\ytilde\right)
 \end{split}\end{equation*}
 Using that for any positive definite form $Q$ the integral $\exp(-(\bbeta-\mmu)^TQ(\bbeta - \mmu))$ is independent of $\mmu$,
 we find that up to a multiplicative constant:
 \begin{equation*}
-    f(y\mid x, X, Y)=\const\cdot \exp\left(-\frac {\widetilde{y}^2}{2\sigma^2}\left(1-x\left(\LLambda_1+x^Tx\right)^{-1}x^T\right)\right)=
-    \const\cdot \exp\left(-\frac {\widetilde{y}^2}{2\sigma^2}\left(1+x^T\SSigma_1 x^T\right)^{-1}\right)
+    f(y\mid x, X, Y)=\const\cdot \exp\left(-\frac {\ytilde^2}{2\sigma^2}\left(1-x\left(\LLambda_1+x^Tx\right)^{-1}x^T\right)\right)=
+    \const\cdot \exp\left(-\frac {\ytilde^2}{2\sigma^2}\left(1+x^T\SSigma_1 x^T\right)^{-1}\right)
 \end{equation*}
-Consequently, $\widetilde{y}=y-x\mmu_1$ is normally distributed with variance as prescribed by \ref{posterior_y}.
+Consequently, $\ytilde=y-x\mmu_1$ is normally distributed with variance as prescribed by \ref{posterior_y}.
 The second equality above follows from \href{https://en.wikipedia.org/wiki/Sherman%E2%80%93Morrison_formula}{Sherman-Morrison formula}.
 \begin{theorem}[Sherman-Morrison formula]
     Suppose $A\in\RR^{k\times k}$ is an invertible matrix and $u,v\in \RR^k$ are vectors. Then $A+uv^T$  is invertible iff $1+v^TA^{-1}u\neq 0$.
@@ -213,7 +217,7 @@ Posterior distribution of $\bbeta$:
     \label{posterior_beta}&f(\bbeta\mid Y,X,\sigma^2)=\mathcal{N}(\bbeta_1,\sigma^2\SSigma_1)&&\\
     &\SSigma_1^{-1}=\SSigma_0^{-1}+\XTX &&\\
     &\bbeta_1=\SSigma_1\left(\XTX \widehat\bbeta + \SSigma_0^{-1}\bbeta_0\right)&&\\
-    &\widehat{\bbeta}=\XTXi X^TY&&
+    &\bbetahat=\XTXi X^TY&&
 \end{flalign}
 Posterior prediction distribution $\widehat y \equiv x\cdot\bbeta$:
 \begin{equation}\label{posterior_predx}
@@ -239,17 +243,117 @@ Posterior observation distribution $\widehat y \equiv x\cdot\bbeta + e$:
 \begin{proof} We only consider the case $l=1$ with $A=a=(a_1, a_2,\ldots, a_k)$ is and $A\bbeta$ is a one dimensional random variable.
 Without loss of generality we may assume $a_1\neq 0$. Introduce notations:
 \begin{align}
-    &\bbeta = \left(\beta_1,\ \bbeta_{-1}^T\right)^T,\ \beta_1\in\RR^k,\ \bbeta_{-1}\in\RR^{k-1}\\
-    &\widetilde{\bbeta}=\left(\widetilde{\bbeta}_1,\ \widetilde{\bbeta}_{-1}^T\right)^T=\bbeta-\mmu\\
     &\yhat = a\bbeta\\
-    &\widetilde{y}=\yhat-a\mmu\\
+    &\ytilde=\yhat-a\mmu\\
+    &a = \left(a_1,\ \aaa_{-1}\right),\ a_1\in\RR^k,\ \aaa_{-1}\in\RR^{k-1}\\
+    &\bbeta = \left(\beta_1,\ \bbeta_{-1}^T\right)^T,\ \beta_1\in\RR^k,\ \bbeta_{-1}\in\RR^{k-1}\\
+    &\bbetatilde=\left(\bbetatilde_1,\ \bbetatilde_{-1}^T\right)^T=\bbeta-\mmu\\
     &\LLambda=\SSigma^{-1}\\
     &\LLambda=\left(\begin{matrix}
-        \lambda_1 && \llambda_1\\
+        \lambda_{11} && \llambda_1\\
         \llambda_1^T && \LLambda_{-1}
     \end{matrix}\right)
 \end{align}
-We note that the volume element $d\bbeta=d\beta_1d\bbeta_{-1}=d\left(\frac{\yhat-}{a_1}\right)d\bbeta_{-1}$
+We note that the volume element
+$\displaystyle d\bbeta=d\beta_1\boldsymbol{d}\bbeta_{-1}=d\left(\frac{\yhat-\aaa_{-1}\bbeta_{-1}}{a_1}\right)d\bbeta_{-1}=\frac 1{a_1}d\yhat\boldsymbol{d}\bbeta{-1}$.
+Thus to get the density of $\yhat$ it suffices to integrate out $\boldsymbol{d}\bbeta_{-1}$. It's easy to re-center variables for convenience using:
+\begin{equation*}\begin{split}
+    \left(\frac{1}{a_1}\left(\yhat-\aaa_{-1}\bbeta_{-1}\right)-\mmu_1,\ \bbeta_{-1}^T-\mmu_{-1}^T\right)=&\left(\frac{1}{a_1}\left(\yhat-a_1\mmu_1-\aaa_{-1}\left(\bbeta_{-1}-\mmu_{-1}\right)-\aaa_{-1}\mmu_{-1}\right),\ \bbeta_{-1}^T-\mmu_{-1}^T\right)=\\
+    =&\left(\frac{1}{a_1}\left(\ytilde-\aaa_{-1}\bbetatilde_{-1}\right)-\mmu_1,\ \bbetatilde_{-1}^T\right)
+\end{split}\end{equation*}
+We will use that the integral of the exponent of a qudratic form in a shift of $\bbetatilde$ gives a multiplicative constant that
+does not depend on $\ytilde$:
+(same idea as in the proof of Proposition\ref{posterior_pred}):
+\begin{equation*}\begin{split}
+    \left(\begin{matrix}\frac 1{a_1}\left(\ytilde-\aaa_{-1}\bbetatilde_{-1}\right)\\\bbetatilde_{-1}\end{matrix}\right)^T
+    &\LLambda
+    \left(\begin{matrix}\frac 1{a_1}\left(\ytilde-\aaa_{-1}\bbetatilde_{-1}\right)\\\bbetatilde_{-1}\end{matrix}\right)=\\
+    =\left(\begin{matrix}\frac \ytilde{a_1}\\\boldsymbol{0}\end{matrix}\right)^T
+    \LLambda
+    \left(\begin{matrix}\frac \ytilde{a_1}\\\boldsymbol{0}\end{matrix}\right)+
+    &\left(\begin{matrix}\frac \ytilde{a_1}\\\boldsymbol{0}\end{matrix}\right)^T
+    \LLambda
+    \left(\begin{matrix}-\frac {\aaa_{-1}}{a_1}\\\boldsymbol{I}\end{matrix}\right)\bbetatilde_{-1}+
+    \bbetatilde_{-1}^T\left(\begin{matrix}-\frac {\aaa_{-1}}{a_1}\\\boldsymbol{I}\end{matrix}\right)^T
+    \LLambda
+    \left(\begin{matrix}\frac \ytilde{a_1}\\\boldsymbol{0}\end{matrix}\right)^T+
+    \bbetatilde_{-1}^T\left(\begin{matrix}-\frac {\aaa_{-1}}{a_1}\\\boldsymbol{I}\end{matrix}\right)^T
+    \LLambda\left(\begin{matrix}-\frac {\aaa_{-1}}{a_1}\\\boldsymbol{I}\end{matrix}\right)\bbetatilde_{-1}
+\end{split}\end{equation*}
+Completing squares in $\bbetatilde_{-1}$ and integrating it out, we're left with an exponential of the following expression in $\ytilde$:
+\begin{equation}\label{appendix_gauss_conv_eq}\begin{split}
+    \left(\begin{matrix}\frac \ytilde{a_1}\\\boldsymbol{0}\end{matrix}\right)^T
+    \LLambda&
+    \left(\begin{matrix}\frac \ytilde{a_1}\\\boldsymbol{0}\end{matrix}\right)-
+    \left(\begin{matrix}\frac \ytilde{a_1}\\\boldsymbol{0}\end{matrix}\right)^T
+    \LLambda
+    \left(\begin{matrix}-\frac {\aaa_{-1}}{a_1}\\\boldsymbol{I}\end{matrix}\right)
+    \left(
+        \left(\begin{matrix}-\frac {\aaa_{-1}}{a_1}\\\boldsymbol{I}\end{matrix}\right)^T
+        \LLambda
+        \left(\begin{matrix}-\frac {\aaa_{-1}}{a_1}\\\boldsymbol{I}\end{matrix}\right)
+    \right)^{-1}
+    \left(\begin{matrix}-\frac {\aaa_{-1}}{a_1}\\\boldsymbol{I}\end{matrix}\right)^T
+    \LLambda
+    \left(\begin{matrix}\frac \ytilde{a_1}\\\boldsymbol{0}\end{matrix}\right)=\\
+    &=\frac{\ytilde^2}{a_1^2}\lambda_{11}-\left(-\frac{\ytilde}{a_1^2}\lambda_{11}\aaa_{-1}+\frac{\ytilde}{a_1}\llambda_1\right)
+    \left(
+        \left(\begin{matrix}-\frac {\aaa_{-1}}{a_1}\\\boldsymbol{I}\end{matrix}\right)^T
+        \LLambda
+        \left(\begin{matrix}-\frac {\aaa_{-1}}{a_1}\\\boldsymbol{I}\end{matrix}\right)
+    \right)^{-1}
+    \left(-\frac{\ytilde}{a_1^2}\lambda_{11}\aaa_{-1}^T+\frac{\ytilde}{a_1}\llambda_1^T\right)=\\
+    =\frac{\ytilde^2}{a_1^2}\lambda_{11}-&\left(-\frac{\ytilde}{a_1^2}\lambda_{11}\aaa_{-1}+\frac{\ytilde}{a_1}\llambda_1\right)
+    \left(
+    \frac 1{a_1^2}\aaa_{-1}^T\aaa_{-1}-\frac 1{a_1}\llambda_{-1}^T\aaa_{-1}-\frac 1{a_1}\aaa_{-1}^T\llambda_{-1}+\LLambda_{-1}
+    \right)^{-1}
+    \left(-\frac{\ytilde}{a_1^2}\lambda_{11}\aaa_{-1}^T+\frac{\ytilde}{a_1}\llambda_1^T\right)
+\end{split}\end{equation}
+The next step is to apply recognize the above expression as the inverse of a matrix using two versions of the \href{https://en.wikipedia.org/wiki/Block_matrix}{block-matrix inverse}:
+\begin{lemma}
+    If matrices $A$ and $D-CA^{-1}B$ are invertible then:
+    \begin{equation}\label{appendix_gauss_conv_eq2}
+        \left(\begin{matrix}A&&B\\C&&D\end{matrix}\right)^{-1}=
+        \left(\begin{matrix}
+        A^{-1}+A^{-1}B\left(D-CA^{-1}B\right)^{-1}CA^{-1}&&-A^{-1}B\left(D-CA^{-1}B\right)^{-1}\\
+        -\left(D-CA^{-1}B\right)^{-1}CA^{-1}&&\left(D-CA^{-1}B\right)^{-1}
+        \end{matrix}\right)
+    \end{equation}
+    If matrices $D$ and $A-BD^{-1}C$ are invertible then:
+    \begin{equation}
+        \left(\begin{matrix}A&&B\\C&&D\end{matrix}\right)^{-1}=
+        \left(\begin{matrix}
+        \left(A-BD^{-1}C\right)^{-1}&&-\left(A-BD^{-1}C\right)^{-1}BD^{-1}\\
+        -D^{-1}C\left(A-BD^{-1}C\right)^{-1}&&D^{-1}+D^{-1}C\left(A-BD^{-1}C\right)^{-1}BD^{-1}
+        \end{matrix}\right)
+    \end{equation}
+    If matrices $A$ and $D$ are invertible then:
+    \begin{equation}
+        \left(\begin{matrix}A&&B\\C&&D\end{matrix}\right)^{-1}=
+        \left(\begin{matrix}\left(A-BD^{-1}C\right)^{-1}&&\boldsymbol{0}\\\boldsymbol{0}&&\left(D-CA^{-1}B\right)^{-1}\end{matrix}\right)
+        \left(\begin{matrix}\boldsymbol{I}&&-BD^{-1}\\-CA^{-1}&&\boldsymbol{I}\end{matrix}\right)
+    \end{equation}
+\end{lemma}
+Applying the above to
+$A=\frac{a_1^2}{\lambda_{11}},\ B=\aaa_{-1}-\frac{a_1}{\lambda_{11}}\llambda_1,\ C=-B^T,\ D=\LLambda_{-1}-\frac 1{\lambda_{11}}\llambda_1^T\llambda_1$
+we see that the right hand side of \ref{appendix_gauss_conv_eq} can be rewrittn further
+\begin{equation}\begin{split}
+    \ytilde^2\left(
+        \frac{a_1^2}{\lambda_{11}}+
+        \left(-\aaa_{-1}+\frac{a_1}{\lambda_{11}}\llambda_1\right)
+        \left(\LLambda_{-1}-\frac 1{\lambda_{11}}\llambda_1^T\llambda_1\right)^{-1}
+        \left(-\aaa_{-1}^T+\frac{a_1}{\lambda_{11}}\llambda_1^T\right)
+        \right)^{-1}=\\
+        =\ytilde^2+\left(\aaa\left(
+            \left(\begin{matrix}\frac 1{\lambda_{11}}&&\boldsymbol{0}\\\boldsymbol{0}&&\boldsymbol{0}\end{matrix}\right)+
+            \left(\begin{matrix}\frac 1{\lambda_{11}}\llambda_1\\-\boldsymbol{I}\end{matrix}\right)
+            \left(\LLambda_{-1}-\frac 1{\lambda_{11}}\llambda_1^T\llambda_1\right)^{-1}
+            \left(\begin{matrix}\frac 1{\lambda_{11}}\llambda_1^T&&-\boldsymbol{I}\end{matrix}\right)
+            \right)\aaa^T\right)^{-1}
+\end{split}\end{equation}
+It suffices to observe that the quadratic form in $\aaa$ in the expression above equals $\SSigma$. Indeed this follows from
+the formula \ref{appendix_gauss_conv_eq2} applied to $\SSigma=\LLambda^{-1}$.
 \end{proof}
+
 
 \end{document}
