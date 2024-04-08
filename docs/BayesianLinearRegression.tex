@@ -133,7 +133,7 @@
 Define for convenience $\LLambda_0\eq\SSigma_0^{-1}$. Using $f(\beta\mid X, Y)\propto f(X, Y\mid \bbeta)f(\bbeta)$ and taking logarithms one has:
 \begin{equation*}\begin{split}
     \ln f(\bbeta\mid X, Y)+\const=-\left(\frac n 2 \ln{\sigma^2}+\frac n 2\ln 2\pi+\frac 1 2 \ln \SSigma_0+\frac k 2 \ln 2\pi\right)-&&\\
-    -\frac 1{2\sigma^2}(Y-X\bbeta)^T(Y-X\bbeta)-\frac 1{2\sigma^2}(\bbeta-\mmu_0)^T\LLambda_0(\bbeta -&&\mmu_0)=\\
+    -\frac 1{2\sigma^2}(Y-X\bbeta)^T(Y-X\bbeta)-\frac 1{2\sigma^2}(\bbeta-\mmu_0)^T\LLambda_0(\bbeta-\mmu_0)=&&\\
     =-\left(\frac n 2\ln{\sigma^2}+\frac n 2\ln 2\pi+\frac 1 2 \ln \SSigma_0+\frac k 2 \ln 2\pi\right)-&&\\
     -\frac 1{2\sigma^2}\left(\bbeta^T\left(X^TX+\LLambda_0\right)\bbeta-(Y^TX+\mmu_0^T\LLambda_0)\bbeta-
     \bbeta^T\left(X^TY+\LLambda_0\mmu_0\right)+Y^TY+\mmu_0^T\LLambda_0\mmu_0\right)&&
@@ -142,7 +142,7 @@ It suffices to show that this expression is a quadratic form $-\frac 1 {2\sigma^
 up to an additive term independent of $\bbeta$. Here $\mmu_1$ and $\LLambda_1$ are as in \ref{posterior_mu}-\ref{posterior_mu2}.
 This follows immediately from the lemma on completing squares:
 \begin{lemma}\label{lemmaQ}
-    For any symmetric quadratic form $Q$, liner form $L$ and vector $v$
+    For any symmetric quadratic form $Q$, liner form $L$ and vector $v$:
     \begin{equation*}
         v^TQv-v^TL-L^Tv=(v-Q^{-1}L)^TQ(v-Q^{-1}L)-L^TQ^{-1}L
     \end{equation*}
@@ -263,7 +263,7 @@ Thus to get the density of $\yhat$ it suffices to integrate out $\boldsymbol{d}\
 \end{split}\end{equation*}
 We will use that the integral of the exponent of a qudratic form in a shift of $\bbetatilde$ gives a multiplicative constant that
 does not depend on $\ytilde$:
-(same idea as in the proof of Proposition\ref{posterior_pred}):
+(same idea as in the proof of Proposition \ref{posterior_pred}, see \ref{lemmaQ}):
 \begin{equation*}\begin{split}
     \left(\begin{matrix}\frac 1{a_1}\left(\ytilde-\aaa_{-1}\bbetatilde_{-1}\right)\\\bbetatilde_{-1}\end{matrix}\right)^T
     &\LLambda
