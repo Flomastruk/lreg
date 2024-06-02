@@ -92,7 +92,7 @@
 \end{enumerate}
 
 \subsection{Model Assumptions}
-\begin{enumerate}
+\begin{enumerate}\label{assumptions}
     \item Observations $(x, y)$ satisfy linear relation \ref{linear}
     \item Observation errors are independent normally distributed with mean zero and variance $\sigma^2$
     \item For posterior estimation, observations $X$ must have full rank
@@ -108,13 +108,13 @@
     with parameters:
     \begin{align}
         \label{posterior_mu}&\SSigma_1^{-1}=\SSigma_0^{-1}+\XTX&&\\
-        \label{posterior_mu1}&\mmu_1=\SSigma_1\left(\XTX \widehat\bbeta + \SSigma_0^{-1}\mu_0\right)&&\\
+        \label{posterior_mu1}&\mmu_1=\SSigma_1\left(\XTX \widehat\bbeta + \SSigma_0^{-1}\mmu_0\right)&&\\
         \label{posterior_mu2}&\bbetahat=\XTXi X^TY&&
     \end{align}
 \end{proposition}
 \begin{proposition}[Posterior predictive distribution with known variance]\label{posterior_pred}
     For an observation $(x, y)$ and its expectation $(x, \yhat\eq x\cdot\bbeta)$,
-    posterior conditional distributions of $y$ and $\yhat$ are normal with parameters given below
+    posterior conditional distributions of $y$ and $\yhat$ are normal with parameters given below:
     \begin{align}
         \label{posterior_y}&f(y\mid x, X, Y)=\mathcal{N}\left(x\mmu_1, \sigma^2\left(1+x\SSigma_1 x^T\right)\right)&&\\
         \label{posterior_y1}&f(\widehat y\mid x, X, Y)=\mathcal{N}\left(x\mmu_1, \sigma^2 x\SSigma_1 x^T\right)&&
@@ -151,7 +151,7 @@ This follows immediately from the lemma on completing squares:
 \begin{proof}[Proof of Proposition \ref{posterior_pred}]
 \noindent To find the posterior predictive distribution \ref{posterior_y}, we integrate out parameter $\bbeta$:
 \begin{equation*}\begin{split}
-f(y\mid x, X, Y)=\int\displaylimits_{\bbeta\in\RR^k}f(y\mid x,X,Y,\bbeta)&f(\bbeta\mid X,Y)d\bbeta=\\
+f(y\mid x,X,Y)=\int\displaylimits_{\bbeta\in\RR^k}f(y\mid x,\bbeta)&f(\bbeta\mid X,Y)d\bbeta=\\
 =\int\displaylimits_{\bbeta\in\RR^k}&\frac {\left(\det\LLambda_1\right)^{\frac 12}}{\left(2\pi\sigma^2\right)^{\frac{1+k}2}}
 \exp\left(-\frac 1{2\sigma^2}\left((y-x\beta)^2+(\bbeta-\mmu_1)^T\LLambda_1(\bbeta-\mmu_1)\right)\right)d\bbeta
 \end{split}\end{equation*}
@@ -167,7 +167,7 @@ Using that for any positive definite form $Q$ the integral $\exp(-(\bbeta-\mmu)^
 we find that up to a multiplicative constant:
 \begin{equation*}
     f(y\mid x, X, Y)=\const\cdot \exp\left(-\frac {\ytilde^2}{2\sigma^2}\left(1-x\left(\LLambda_1+x^Tx\right)^{-1}x^T\right)\right)=
-    \const\cdot \exp\left(-\frac {\ytilde^2}{2\sigma^2}\left(1+x^T\SSigma_1 x^T\right)^{-1}\right)
+    \const\cdot \exp\left(-\frac {\ytilde^2}{2\sigma^2}\left(1+x\SSigma_1 x^T\right)^{-1}\right)
 \end{equation*}
 Consequently, $\ytilde=y-x\mmu_1$ is normally distributed with variance as prescribed by \ref{posterior_y}.
 The second equality above follows from \href{https://en.wikipedia.org/wiki/Sherman%E2%80%93Morrison_formula}{Sherman-Morrison formula}.
@@ -187,9 +187,60 @@ We give an ``elementary'' proof in Appendix \ref{appendix_gauss_conv}
 Straightforward by substituting $\mmu_0=0$ and $\SSigma_0^{-1}=0$ in propositions \ref{posterior} and \ref{posterior_pred}
 \end{proof}
 
-
 \section{Inverse Gamma Prior for Variance Scale Parameter}
+\begin{proposition}[Posterior paramer distribution]\label{posterior_var}
+    Under assumptions with unkown variance \ref{assumptions}, the posterior distribution decomposes as
+    $f(\bbeta,\sigma^2\mid X, Y)=f(\bbeta\mid X, Y, \sigma^2)f(\sigma^2\mid X, Y)$ where the conditional posterior distribution $f(\bbeta\mid X, Y, \sigma^2)=\mathcal{N}(\mmu_1, \sigma^2\SSigma_1)$
+    is normal with parameters as in \ref{posterior_mu}-\ref{posterior_mu2} and $f(\sigma^2\mid X, Y)=\invGamma(a_1, b_1)$
+    with parameters:
+    \begin{align}
+        \label{posterior_sigsq}&a_1=a_0+\frac n 2&&\\
+        \label{posterior_sigsq2}&b_1=b_0+\frac 12\left(Y^TY+\mmu_0\SSigma_0^{-1}\mmu_0^T-\mmu_1\SSigma_1^{-1}\mmu_1^T\right)&&
+    \end{align}
+    In particular, for $\LLambda_0=0$ the increment in update of $b_0$ is the residual sum of squares for OLS regression:
+    \begin{equation*}
+        b_1=b_0+\frac 12 (Y^TY-Y^TX\XTXi X^TY)
+    \end{equation*}
+\end{proposition}
 
+\begin{proposition}[Posterior predictive distribution]\label{posterior_var_pred}
+    For an observation $(x, y)$ and its expectation $(x, \yhat\eq x\cdot\bbeta)$,
+    posterior conditional distributions of $y$ and $\yhat$ are location-scale $t$-distributions with parameters given below:
+    \begin{align}
+        \label{posterior_var_y}&f(y\mid x, X, Y)=lst\left(x\mmu_1, \frac{b_1}{a_1}\left(1+x\SSigma_1 x^T\right), 2a_1\right)&&\\
+        \label{posterior_var_y1}&f(\widehat y\mid x, X, Y)=lst\left(x\mmu_1, \frac{b_1}{a_1} x\SSigma_1 x^T, 2a_1\right)&&
+    \end{align}
+\end{proposition}
+\begin{corollary}
+    TODO: Posterior distribution of $f(\beta\mid X, Y)$ is multivariate $t$-distribution with parameters 
+\end{corollary}
+\begin{corollary}
+    TODO: Recall the standard OLS formula for beta estimation and $\widehat{\sigma^2}$.. compare to $n-k$ degrees of freedom
+\end{corollary}
+\begin{proof}[Proof of Proposition \ref{posterior_var}]
+Using $f(\bbeta, \sigma^2\mid X, Y)\propto f(X, Y\mid \bbeta, \sigma^2)f(\bbeta\mid\sigma^2)f(\sigma^2)$ and
+substituting assumptions for model distributions one gets:
+\begin{equation*}\begin{split}
+    f(\bbeta,\sigma^2\mid X, Y)\propto&\frac 1 {\left(2\pi\sigma^2\right)^{\frac n 2}}
+    \exp\left(-\frac 1{2\sigma^2}\left(Y-X\bbeta\right)^T\left(Y-X\bbeta\right)\right)\cdot\\
+    &\cdot\frac{\left(\det\LLambda_0\right)^{\frac 12}}{\left(2\pi\sigma^2\right)^{\frac{k}2}}
+    \exp\left(-\frac 1{2\sigma^2}(\bbeta-\mmu_0)^T\LLambda_0(\bbeta-\mmu_0)\right)
+    \frac{{b_0}^{a_0}}{\Gamma(a_0)}\left(\sigma^2\right)^{-a_0-1}\exp\left(-\frac{b_0}{\sigma^2}\right)
+\end{split}\end{equation*}
+Following the proof of Proposition \ref{posterior}, completing the squares under the exponential gives:
+\begin{equation*}\begin{split}
+    -\frac 1{2\sigma^2}\left(\bbeta^T\LLambda_1\bbeta-\mmu_1^T\LLambda_1\bbeta-\bbeta^T\LLambda_1\mmu_1+Y^TY+\mmu_0^T\LLambda_0\mmu_0\right)&=\\
+    =-\frac 1{2\sigma^2}&\left((\bbeta-\mmu_1)^T\LLambda_1(\bbeta-\mmu_1)+Y^TY+\mmu_0^T\LLambda_0\mmu_0-\mmu_1^T\LLambda_1\mmu_1\right)
+\end{split}\end{equation*}
+It follows that up to a constant independent of $\bbeta$ and $\sigma^2$, the posterior $f(\bbeta,\sigma^2\mid X, Y)$ can be written as:
+\begin{equation*}
+    \frac 1{\left(2\pi\sigma^2\right)^{\frac{k}2}}
+    \exp\left(-\frac 1{2\sigma^2}(\bbeta-\mmu_1)^T\LLambda_1(\bbeta-\mmu_1)\right)
+    \left(\sigma^2\right)^{-a_0-\frac n 2 -1}\exp\left(-\frac{1}{\sigma^2}\left(b_0+\frac 12 
+    \left(Y^TY+\mmu_0^T\LLambda_0\mmu_0-\mmu_1^T\LLambda_1\mmu_1\right)
+    \right)\right)
+\end{equation*}
+\end{proof}
 
 \section{Conjugate Priors For Observation Variance and Linear Weights}
 \subsection{Setup}
