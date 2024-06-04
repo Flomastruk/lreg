@@ -163,7 +163,7 @@ Set $\bbetatilde\eq\bbeta-\mmu_1$ and $\ytilde\eq y-x\mmu_1$. The expession unde
     \left(\bbetatilde-\left(\LLambda_1+x^Tx\right)^{-1}x^T\ytilde\right)^T\left(\LLambda_1+x^Tx\right)
     \left(\bbetatilde-\left(\LLambda_1+x^Tx\right)^{-1}x^T\ytilde\right)
 \end{split}\end{equation*}
-Using that for any positive definite form $Q$ the integral $\exp(-(\bbeta-\mmu)^TQ(\bbeta - \mmu))$ is independent of $\mmu$,
+Using that for any positive definite form $Q$ the integral $\exp(-(\bbeta-\boldsymbol{v})^TQ(\bbeta-\boldsymbol{v}))$ is independent of $\boldsymbol{v}\in\RR^k$,
 we find that up to a multiplicative constant:
 \begin{equation*}
     f(y\mid x, X, Y)=\const\cdot \exp\left(-\frac {\ytilde^2}{2\sigma^2}\left(1-x\left(\LLambda_1+x^Tx\right)^{-1}x^T\right)\right)=
@@ -229,8 +229,8 @@ substituting assumptions for model distributions one gets:
 \end{split}\end{equation*}
 Following the proof of Proposition \ref{posterior}, completing the squares under the exponential gives:
 \begin{equation*}\begin{split}
-    -\frac 1{2\sigma^2}\left(\bbeta^T\LLambda_1\bbeta-\mmu_1^T\LLambda_1\bbeta-\bbeta^T\LLambda_1\mmu_1+Y^TY+\mmu_0^T\LLambda_0\mmu_0\right)&=\\
-    =-\frac 1{2\sigma^2}&\left((\bbeta-\mmu_1)^T\LLambda_1(\bbeta-\mmu_1)+Y^TY+\mmu_0^T\LLambda_0\mmu_0-\mmu_1^T\LLambda_1\mmu_1\right)
+    -\frac 1{2\sigma^2}&\left(\bbeta^T\LLambda_1\bbeta-\mmu_1^T\LLambda_1\bbeta-\bbeta^T\LLambda_1\mmu_1+Y^TY+\mmu_0^T\LLambda_0\mmu_0\right)=\\
+    &=-\frac 1{2\sigma^2}\left((\bbeta-\mmu_1)^T\LLambda_1(\bbeta-\mmu_1)+Y^TY+\mmu_0^T\LLambda_0\mmu_0-\mmu_1^T\LLambda_1\mmu_1\right)
 \end{split}\end{equation*}
 It follows that up to a constant independent of $\bbeta$ and $\sigma^2$, the posterior $f(\bbeta,\sigma^2\mid X, Y)$ can be written as:
 \begin{equation*}
@@ -241,49 +241,36 @@ It follows that up to a constant independent of $\bbeta$ and $\sigma^2$, the pos
     \right)\right)
 \end{equation*}
 \end{proof}
+\begin{proof}[Proof of Proposition \ref{posterior_var_pred}]
+We only give the proof for predictive distribution of $y$, the result for $\widehat{y}$ is shown analogously. By definition,
+\begin{equation}\label{posterior_pred_proof}\begin{split}
+    f(y\mid x, X, Y)=\int\displaylimits_{\sigma^2\in\RR_+}
+    \left[\int\displaylimits_{\bbeta\in\RR^k}f\left(y\mid x,\bbeta,\sigma^2\right)f\left(\bbeta\mid X,Y,\sigma^2\right)d\bbeta\right]
+    f\left(\sigma^2\mid X, Y\right)d\sigma^2
+\end{split}\end{equation}
+Following the proof and reusing notations of Proposition \ref{posterior_pred}, the inner integral has the form:
+\begin{equation*}\begin{split}
+    \int\displaylimits_{\bbeta\in\RR^k}\frac{\left(\det\LLambda_1\right)^{\frac 12}}{\left(2\pi\sigma^2\right)^{\frac{1+k}2}}
+    &\exp\left(-\frac 1{2\sigma^2}\left((y-x\beta)^2+(\bbeta-\mmu_1)^T\LLambda_1(\bbeta-\mmu_1)\right)\right)d\bbeta=\\
+    =\int\displaylimits_{\bbeta\in\RR^k}&\frac{\left(\det\LLambda_1\right)^{\frac 12}}{\left(2\pi\sigma^2\right)^{\frac{1+k}2}}
+    \exp\left(-\frac{\ytilde^2}{2\sigma^2}\left(1+x\SSigma_1 x^T\right)^{-1}\right)
+    \exp\left(-\frac 1{2\sigma^2}\left((\bbeta-\boldsymbol{v})^TQ(\bbeta-\boldsymbol{v})\right)\right)d\bbeta=\\
+    =&\const\cdot\frac 1{\left(\sigma^2\right)^\frac 1 2}\exp\left(-\frac{\ytilde^2}{2\sigma^2}\left(1+x\SSigma_1 x^T\right)^{-1}\right)
+\end{split}\end{equation*}
+where $\boldsymbol{v}\in\RR^k$ is a vector and $Q$ is a positive-definite quadratic form,  independent of $\bbeta$ and $\sigma^2$.
+In the second equality we used that the $k$-th power of $\sigma^2$ cancels out after integrating the second exponential
+($k$-dimensional volume scale).
 
-\section{Conjugate Priors For Observation Variance and Linear Weights}
-\subsection{Setup}
-\begin{equation}
-    f(Y,X\mid \bbeta,\sigma^2) = \left(2\pi\sigma^2\right)^{-\frac{n}{2}}
-    \exp\left(-\frac{1}{2\sigma^2}(y-X\bbeta)^T(y-X\bbeta)\right)
-\end{equation}
-\begin{equation}
-    f(\bbeta\mid\sigma^2)=\lvert2\pi\SSigma_0\rvert^{-1}
-    \exp\left(-\frac{1}{2\sigma^2}(\bbeta-\bbeta_0)\SSigma_0^{-1}(\bbeta-\bbeta_0)^T\right)
-\end{equation}
-\begin{equation}
-    f(\sigma^2)=\frac{b_0^{a_0}}{\Gamma(a_0)}(\sigma^2)^{-a_0-1}\exp\left(-\frac{b_0}{\sigma^2}\right)
-\end{equation}
-Alternatively $f(\sigma^2)$ can be written as scaled inverse chi-squared distribution
-with parameters $\left(\nu_0,\tau_0^2\right)=\left(2a_0,\frac{b_0}{a_0}\right)$
-
-
-\subsection{Summary of Results}
-Posterior distribution of $\bbeta$:
-\begin{flalign}
-    \label{posterior_sigma}&f(\sigma^2\mid Y,X)=\invGamma(a_1,b_1)&&\\
-    &a_1=a_0+\frac n 2&&\\
-    &b_1=b_0+\frac 12\left(Y^TY+\bbeta_0\SSigma_0^{-1}\bbeta_0^T-\bbeta_1\SSigma_1^{-1}\bbeta_1^T\right)&&\\
-    \label{posterior_beta}&f(\bbeta\mid Y,X,\sigma^2)=\mathcal{N}(\bbeta_1,\sigma^2\SSigma_1)&&\\
-    &\SSigma_1^{-1}=\SSigma_0^{-1}+\XTX &&\\
-    &\bbeta_1=\SSigma_1\left(\XTX \widehat\bbeta + \SSigma_0^{-1}\bbeta_0\right)&&\\
-    &\bbetahat=\XTXi X^TY&&
-\end{flalign}
-Posterior prediction distribution $\widehat y \equiv x\cdot\bbeta$:
-\begin{equation}\label{posterior_predx}
-    f(\widehat y\mid Y, X, x)\propto\left(1+\frac{a_1\left(y-x\bbeta_1\right)^2}{vb_1}\frac 1{2a_1}\right)^{-\frac{2a_1+1}{2}}
-\end{equation}
-\begin{equation}
-    v = \left(1-x\left(\SSigma_1+x^Tx\right)^{-1}x^T\right)^{-1}
-\end{equation}
-This is Student's $t$-distribution on $y-x\bbeta_1$ with scale $\frac{vb_1}{a_1}$ and $2a_1$ degrees of freedom.
-
-Posterior observation distribution $\widehat y \equiv x\cdot\bbeta + e$:
-\begin{equation}\label{posterior_obs}
-    f(y\mid Y, X, x)=??
-\end{equation}
-
+Denote $s^2=\left(1+x\SSigma_1 x^T\right)$. Substituting the above expression in \ref{posterior_pred_proof} and using the explicit form
+of $\invGamma(a_1, b_1)$ distribution one gets:
+\begin{equation*}\begin{split}
+    f(y\mid x, X, Y)\propto\int\displaylimits_{\sigma^2\in\RR_+}\frac 1{\left(\sigma^2\right)^{a_1+1+\frac 1 2}}
+    \exp\left(-\frac 1{\sigma^2}\left(b_1+\frac{\ytilde^2}{2s^2}\right)\right)&d\sigma^2=\\
+    =\Gamma\left(a_1+\frac 1 2\right)\left(b_1+\frac{\ytilde^2}{2s^2}\right)^{-a_1-\frac 1 2}&=
+    \frac{\Gamma\left(a_1+\frac 1 2\right)}{b_1^{\frac{2a_1+1}2}}\left(1+\frac{a_1 \ytilde^2 }{2a_1 b_1 s^2}\right)^{-\frac{2a_1+1}2}
+\end{split}\end{equation*}
+Hence, the variable $\displaystyle\frac{a_1 \ytilde^2 }{b_1 s^2}$ follows $t$-distribution with $2a_1$ degrees of freedom which readily implies the proposition.
+\end{proof}
 
 \appendix\section{``Elementary'' Proof of Gaussian Convolution}\label{appendix_gauss_conv}
 % next \section will use \appendix counter
