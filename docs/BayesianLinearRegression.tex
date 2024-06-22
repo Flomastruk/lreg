@@ -80,7 +80,7 @@
 \section{Framework}
 \subsection{Notations}
 \begin{equation}\label{linear}
-    y = x\cdot \bbeta +\varepsilon,\ \varepsilon \sim\mathcal{N}(0,\sigma^2)
+    y = x\cdot \bbeta +\varepsilon,\ \varepsilon \sim\mathcal{N}\left(0,\sigma^2\right)
 \end{equation}
 
 \begin{enumerate}
@@ -96,9 +96,9 @@
     \item Observations $(x, y)$ satisfy linear relation \ref{linear}
     \item Observation errors are independent normally distributed with mean zero and variance $\sigma^2$
     \item For posterior estimation, observations $X$ must have full rank
-    \item For known error variance $\sigma^2$, the prior on the space of parameters $\bbeta\in\RR^k$ is $\mathcal{N}(\mmu,\sigma^2\SSigma)$
-    \item For unknown error variance, the prior for $(\bbeta, \sigma^2)\in\RR^{k+1}$ has $\sigma^2$ following inverse gamma distribution 
-    with parameters $(a_0, b_0)$, and conditional distribution for linear relation weights $f(\bbeta\mid\sigma^2)=\mathcal{N}(\mmu,\sigma^2\SSigma)$
+    \item For known error variance $\sigma^2$, the prior on the space of parameters $\bbeta\in\RR^k$ is $\mathcal{N}\left(\mmu,\sigma^2\SSigma\right)$
+    \item For unknown error variance, the prior for $\left(\bbeta, \sigma^2\right)\in\RR^{k+1}$ has $\sigma^2$ following inverse gamma distribution 
+    with parameters $\left(a_0, b_0\right)$, and conditional distribution for linear relation weights $f\left(\bbeta\mid\sigma^2\right)=\mathcal{N}\left(\mmu,\sigma^2\SSigma\right)$
 \end{enumerate}
 
 \section{Gaussian Prior with Known Variance}
@@ -120,13 +120,13 @@
         \label{posterior_y1}&f(\widehat y\mid x, X, Y)=\mathcal{N}\left(x\mmu_1, \sigma^2 x\SSigma_1 x^T\right)&&
     \end{align}
 \end{proposition}
-\begin{proposition}[Bayesian regresssion under known vairance and uninformative prior]\label{uninform}
-    If the prior parameter $\bbeta$ distribution is uninformative, i.e. $\mmu_0=0$ and $\SSigma_0^{-1}=0$,
-    then posterior distributions of model parameters and predictive distributions recover standard OLS formulas:
+\begin{proposition}[Bayesian regression under known vairance and non-informative prior]\label{non_inform}
+    If the prior on parameter~$\bbeta$ is non-informative, i.e. $\mmu_0=0$ and $\SSigma_0^{-1}=0$,
+    then posterior distribution of model parameters and predictive distributions recover standard OLS formulas:
     \begin{align}
-        \label{uninform_posterior_mu}&\bbeta\sim\mathcal{N}\left(\mmu_1,\sigma^2\XTXi\right)&&\\
-        \label{uninform_posterior_y}&f(y\mid x, X, Y)=\mathcal{N}\left(x\mmu_1, \sigma^2\left(1+x\XTXi x^T\right)\right)&&\\
-        \label{uninform_posterior_y1}&f(\widehat y\mid x, X, Y)=\mathcal{N}\left(x\mmu_1, \sigma^2 x\XTXi x^T\right)&&
+        \label{non_inform_posterior_mu}&\bbeta\sim\mathcal{N}\left(\XTXi\XTY,\sigma^2\XTXi\right)&&\\
+        \label{non_inform_posterior_y}&f(y\mid x, X, Y)=\mathcal{N}\left(x\XTXi\XTY, \sigma^2\left(1+x\XTXi x^T\right)\right)&&\\
+        \label{non_inform_posterior_y1}&f(\widehat y\mid x, X, Y)=\mathcal{N}\left(x\XTXi\XTY, \sigma^2 x\XTXi x^T\right)&&
     \end{align}
 \end{proposition}
 \begin{proof}[Proof of Proposition \ref{posterior}]
@@ -183,23 +183,23 @@ The proof of \ref{posterior_y1} may be seen as a direct consequence of the gener
 The result is well-known and is usually demonstrated using Fourier transform.
 We give an ``elementary'' proof in Appendix \ref{appendix_gauss_conv}
 \end{proof}
-\begin{proof}[Proof of Proposition \ref{uninform}]
+\begin{proof}[Proof of Proposition \ref{non_inform}]
 Straightforward by substituting $\mmu_0=0$ and $\SSigma_0^{-1}=0$ in propositions \ref{posterior} and \ref{posterior_pred}
 \end{proof}
 
 \section{Inverse Gamma Prior for Variance Scale Parameter}
 \begin{proposition}[Posterior paramer distribution]\label{posterior_var}
     Under assumptions with unkown variance \ref{assumptions}, the posterior distribution decomposes as
-    $f(\bbeta,\sigma^2\mid X, Y)=f(\bbeta\mid X, Y, \sigma^2)f(\sigma^2\mid X, Y)$ where the conditional posterior distribution $f(\bbeta\mid X, Y, \sigma^2)=\mathcal{N}(\mmu_1, \sigma^2\SSigma_1)$
-    is normal with parameters as in \ref{posterior_mu}-\ref{posterior_mu2} and $f(\sigma^2\mid X, Y)=\invGamma(a_1, b_1)$
+    $f\left(\bbeta,\sigma^2\mid X, Y\right)=f\left(\bbeta\mid X, Y, \sigma^2\right)\cdot f\left(\sigma^2\mid X, Y\right)$ where the conditional posterior distribution $f(\bbeta\mid X, Y, \sigma^2)=\mathcal{N}(\mmu_1, \sigma^2\SSigma_1)$
+    is normal with parameters as in \ref{posterior_mu}-\ref{posterior_mu2} and $f\left(\sigma^2\mid X, Y\right)=\invGamma\left(a_1, b_1\right)$
     with parameters:
     \begin{align}
         \label{posterior_sigsq}&a_1=a_0+\frac n 2&&\\
         \label{posterior_sigsq2}&b_1=b_0+\frac 12\left(Y^TY+\mmu_0\SSigma_0^{-1}\mmu_0^T-\mmu_1\SSigma_1^{-1}\mmu_1^T\right)&&
     \end{align}
-    In particular, for $\LLambda_0=0$ the increment in update of $b_0$ is the residual sum of squares for OLS regression:
+    In particular, for $\LLambda_0=0$ the increment in the update of $b_0$ is the residual sum of squares for OLS regression:
     \begin{equation*}
-        b_1=b_0+\frac 12 (Y^TY-Y^TX\XTXi X^TY)
+        b_1=b_0+\frac 12 \left(Y^TY-Y^TX\XTXi X^TY\right)
     \end{equation*}
 \end{proposition}
 
@@ -211,12 +211,27 @@ Straightforward by substituting $\mmu_0=0$ and $\SSigma_0^{-1}=0$ in proposition
         \label{posterior_var_y1}&f(\widehat y\mid x, X, Y)=lst\left(x\mmu_1, \frac{b_1}{a_1} x\SSigma_1 x^T, 2a_1\right)&&
     \end{align}
 \end{proposition}
-\begin{corollary}
-    TODO: Posterior distribution of $f(\beta\mid X, Y)$ is multivariate $t$-distribution with parameters 
-\end{corollary}
-\begin{corollary}
-    TODO: Recall the standard OLS formula for beta estimation and $\widehat{\sigma^2}$.. compare to $n-k$ degrees of freedom
-\end{corollary}
+\begin{proposition}[Bayesian regression and non-informative prior]\label{non_inform_var}
+    Assume that prior on parameters has form $\displaystyle f(\bbeta,\sigma^2)\propto\frac 1{\sigma^2}$. Then posterior distribution
+    of model parameters and predictive distributions recover standard OLS fomulas:
+    \begin{align}
+        \label{non_inform_posterior_var_sigma2}&\widehat{\sigma^2}=\frac 1{n-k}\left(Y^TY-Y^TX\XTXi X^TY\right)&&\\
+        \label{non_inform_posterior_var_mu}&\bbeta\sim t_{n-k}\left(\XTXi\XTY,\widehat{\sigma^2}\XTXi\right)&&\\
+        \label{non_inform_posterior_var_y}&f(y\mid x, X, Y)=t_{n-k}\left(x\XTXi\XTY,\widehat{\sigma^2}\left(1+x\XTXi x^T\right)\right)&&\\
+        \label{non_inform_posterior_var_y1}&f(\widehat y\mid x, X, Y)=t_{n-k}\left(x\XTXi\XTY,\widehat{\sigma^2}\ x\XTXi x^T\right)&&
+    \end{align}
+    More specifically, the poseteror parameter distribution can be decomposed as in Proposition \ref{posterior_var} with:
+    \begin{align}
+        &f\left(\bbeta\mid X, Y, \sigma^2\right)=\mathcal{N}\left(\XTXi\XTY,\sigma^2\XTXi\right)&&\\
+        &f\left(\sigma^2\mid X, Y\right)=\invGamma\left(\frac{n-k}2,\frac 12 \left(Y^TY-Y^TX\XTXi X^TY\right)\right)&&
+    \end{align}
+\end{proposition}
+\begin{lemma}\label{beta_marginal}
+    Suppose the distribution of $(\bbeta,\sigma^2)\in \RR^{k}\times\RR_+$ is
+    $f\left(\bbeta,\sigma^2\right)=f\left(\bbeta\mid\sigma^2\right)\cdot f\left(\sigma^2\right)$ with
+    $f\left(\bbeta\mid\sigma^2\right)$ normal $\mathcal{N}\left(\mmu,\SSigma\right)$ and $f\left(\sigma^2\right)=\invGamma\left(a, b\right)$.
+    Then the marginal distribution of $\bbeta$ is multivariate $t$-distribution with $2a$ degrees of freedom: $f(\bbeta) = t_{2a}\left(\mmu,\frac ba\SSigma\right)$.
+\end{lemma}
 \begin{proof}[Proof of Proposition \ref{posterior_var}]
 Using $f(\bbeta, \sigma^2\mid X, Y)\propto f(X, Y\mid \bbeta, \sigma^2)f(\bbeta\mid\sigma^2)f(\sigma^2)$ and
 substituting assumptions for model distributions one gets:
@@ -257,7 +272,7 @@ Following the proof and reusing notations of Proposition \ref{posterior_pred}, t
     \exp\left(-\frac 1{2\sigma^2}\left((\bbeta-\boldsymbol{v})^TQ(\bbeta-\boldsymbol{v})\right)\right)d\bbeta=\\
     =&\const\cdot\frac 1{\left(\sigma^2\right)^\frac 1 2}\exp\left(-\frac{\ytilde^2}{2\sigma^2}\left(1+x\SSigma_1 x^T\right)^{-1}\right)
 \end{split}\end{equation*}
-where $\boldsymbol{v}\in\RR^k$ is a vector and $Q$ is a positive-definite quadratic form,  independent of $\bbeta$ and $\sigma^2$.
+where $\boldsymbol{v}\in\RR^k$ is a vector and $Q$ is a positive-definite quadratic form, both independent of $\bbeta$ and $\sigma^2$.
 In the second equality we used that the $k$-th power of $\sigma^2$ cancels out after integrating the second exponential
 ($k$-dimensional volume scale).
 
@@ -269,7 +284,25 @@ of $\invGamma(a_1, b_1)$ distribution one gets:
     =\Gamma\left(a_1+\frac 1 2\right)\left(b_1+\frac{\ytilde^2}{2s^2}\right)^{-a_1-\frac 1 2}&=
     \frac{\Gamma\left(a_1+\frac 1 2\right)}{b_1^{\frac{2a_1+1}2}}\left(1+\frac{a_1 \ytilde^2 }{2a_1 b_1 s^2}\right)^{-\frac{2a_1+1}2}
 \end{split}\end{equation*}
-Hence, the variable $\displaystyle\frac{a_1 \ytilde^2 }{b_1 s^2}$ follows $t$-distribution with $2a_1$ degrees of freedom which readily implies the proposition.
+Where the first step follows from $\displaystyle\int_{\RR_+}r^{-A-1}\exp\left(-\frac B r\right) dr=\frac{\Gamma(A)}{B^A}$ for any $A>0, B>0$.
+Hence, the variable $\displaystyle\frac{a_1 \ytilde^2 }{b_1 s^2}$ follows $t$-distribution with~$2a_1$~degrees of freedom
+which readily implies the proposition.
+\end{proof}
+\begin{proof}[Proof of Lemma \ref{beta_marginal}]
+The proof is similar to the last part of proof of Proposition \ref{posterior_var_pred}. Denote for convenience $\LLambda\eq\SSigma^{-1}$.
+\begin{equation*}
+    \begin{split}
+        f(\beta)=\int_{\sigma^2\in\RR_+}f\left(\beta,\sigma^2\right)d\sigma^2&=\\
+        =\int_{\sigma^2\in\RR_+}\frac{\left(\det\LLambda\right)^{\frac 12}}{\left(2\pi\sigma^2\right)^{\frac k2}}&
+        \exp\left(-\frac 1{2\sigma^2}(\bbeta-\mmu)^T\LLambda(\bbeta-\mmu)\right)\cdot \frac{{b}^{a}}
+        {\Gamma(a)}\left(\sigma^2\right)^{-a-1}\exp\left(-\frac{b}{\sigma^2}\right) d\sigma^2=\\
+        =\const\cdot&\int_{\sigma^2\in\RR_+}\left(\sigma^2\right)^{-a-\frac k 2 -1}\exp\left(-\frac 1{\sigma^2}
+        \left(b+\frac 12(\bbeta-\mmu)^T\LLambda(\bbeta-\mmu)\right)\right)d\sigma^2=\\
+        &=\const\cdot \frac{\Gamma{\left(a+\frac k 2\right)}}{\left(b+(\bbeta-\mmu)^T\LLambda(\bbeta-\mmu)\right)^{a+\frac k 2}}=
+        \frac{\const \cdot b^{-a-\frac k2}\Gamma{\left(a+\frac k 2\right)}}{\left(1+\frac 1{2a}(\bbeta-\mmu)^T\left(\frac ab\LLambda\right)(\bbeta-\mmu)\right)^{\frac {2a+k}2}}
+    \end{split}
+\end{equation*}
+It remains to recognize the expression above as the standard representation of $t_{2a}\left(\mmu,\frac ba\SSigma\right)$.
 \end{proof}
 
 \appendix\section{``Elementary'' Proof of Gaussian Convolution}\label{appendix_gauss_conv}
@@ -392,6 +425,5 @@ we see that the right hand side of \ref{appendix_gauss_conv_eq} can be rewrittn 
 It suffices to observe that the quadratic form in $\aaa$ in the expression above equals $\SSigma$. Indeed this follows from
 the formula \ref{appendix_gauss_conv_eq2} applied to $\SSigma=\LLambda^{-1}$.
 \end{proof}
-
 
 \end{document}
