@@ -195,7 +195,7 @@ Straightforward by substituting $\mmu_0=0$ and $\SSigma_0^{-1}=0$ in proposition
     with parameters:
     \begin{align}
         \label{posterior_sigsq}&a_1=a_0+\frac n 2&&\\
-        \label{posterior_sigsq2}&b_1=b_0+\frac 12\left(Y^TY+\mmu_0\SSigma_0^{-1}\mmu_0^T-\mmu_1\SSigma_1^{-1}\mmu_1^T\right)&&
+        \label{posterior_sigsq2}&b_1=b_0+\frac 12\left(Y^TY+\mmu_0^T\SSigma_0^{-1}\mmu_0-\mmu_1^T\SSigma_1^{-1}\mmu_1\right)&&
     \end{align}
     In particular, for $\LLambda_0=0$ the increment in the update of $b_0$ is the residual sum of squares for OLS regression:
     \begin{equation*}
@@ -294,8 +294,8 @@ The proof is similar to the last part of proof of Proposition \ref{posterior_var
     \begin{split}
         f(\beta)=\int_{\sigma^2\in\RR_+}f\left(\beta,\sigma^2\right)d\sigma^2&=\\
         =\int_{\sigma^2\in\RR_+}\frac{\left(\det\LLambda\right)^{\frac 12}}{\left(2\pi\sigma^2\right)^{\frac k2}}&
-        \exp\left(-\frac 1{2\sigma^2}(\bbeta-\mmu)^T\LLambda(\bbeta-\mmu)\right)\cdot \frac{{b}^{a}}
-        {\Gamma(a)}\left(\sigma^2\right)^{-a-1}\exp\left(-\frac{b}{\sigma^2}\right) d\sigma^2=\\
+        \exp\left(-\frac 1{2\sigma^2}(\bbeta-\mmu)^T\LLambda(\bbeta-\mmu)\right)\cdot\frac{{b}^{a}}
+        {\Gamma(a)}\left(\sigma^2\right)^{-a-1}\exp\left(-\frac{b}{\sigma^2}\right)d\sigma^2=\\
         =\const\cdot&\int_{\sigma^2\in\RR_+}\left(\sigma^2\right)^{-a-\frac k 2 -1}\exp\left(-\frac 1{\sigma^2}
         \left(b+\frac 12(\bbeta-\mmu)^T\LLambda(\bbeta-\mmu)\right)\right)d\sigma^2=\\
         &=\const\cdot \frac{\Gamma{\left(a+\frac k 2\right)}}{\left(b+(\bbeta-\mmu)^T\LLambda(\bbeta-\mmu)\right)^{a+\frac k 2}}=
@@ -322,7 +322,6 @@ with $\displaystyle a=\frac{n-k}2$ and~$\displaystyle b=\frac 12 \left(Y^TY-Y^TX
 Note that the non-informative prior is uniquely determined by the requirement that the corresponding differential form
 $\displaystyle \frac 1{\sigma^2}d\bbeta d\sigma^2$ is preserved by the action of group $\RR^k\rtimes \RR_+$.
 \end{proof}
-
 
 \appendix\section{``Elementary'' Proof of Gaussian Convolution}\label{appendix_gauss_conv}
 % next \section will use \appendix counter
