@@ -86,7 +86,7 @@
 \begin{enumerate}
     \item Individual observations $(x, y) \in \RR^k\times \RR$
     \item Observed data $(X, Y)\in \RR^{n\times k}\times \RR^n$
-    \item Linear regression weights  $\bbeta \in \RR^k$
+    \item Linear regression weights $\bbeta \in \RR^k$
     \item Model parameter distribution mean $\mmu \in \RR^k$ and covariance matrix $\SSigma \in \RR^{k\times k}$
     \item Observation error variance $\sigma^2$
 \end{enumerate}
@@ -102,7 +102,6 @@
 \end{enumerate}
 
 \section{Gaussian Prior with Known Variance}
-\subsection{Summary of Results}
 \begin{proposition}[Posterior paramer distribution with known variance]\label{posterior}
     The posterior distribution of model parameters is normal $f(\bbeta\mid X,Y)=\mathcal{N}(\mmu_1, \sigma^2\SSigma_1)$
     with parameters:
@@ -339,6 +338,43 @@ with $\displaystyle a=\frac{n-k}2$ and~$\displaystyle b=\frac 12 \left(Y^TY-Y^TX
 Note that the non-informative prior is uniquely determined by the requirement that the corresponding differential form
 $\displaystyle \frac 1{\sigma^2}d\bbeta d\sigma^2$ is preserved by the action of group $\RR^k\rtimes \RR_+$.
 \end{proof}
+
+\section{Exponential Moving Average via Bayesian Linear Regression}
+\subsection{Notations}
+\begin{enumerate}
+    \item Observed data $(X_t, Y_t)\in \RR^{n_t\times k}\times \RR^{n_t},\ t\geq 0$
+    \item Linear regression weights $\bbeta_t \in \RR^k,\ t\geq 0$
+    \item Model parameter distribution mean $\mmu_t \in \RR^k$ and covariance matrix $\SSigma_t \in \RR^{k\times k}$ for $t\geq 0$
+    \item Observation error variance $\sigma_t^2,\ t\geq 0$
+\end{enumerate}
+Weighting scheme $\omega$ for a sequence of observations labelled by $t\geq 0$ is defined in one of the equivalent ways:
+\begin{enumerate}
+    \item $w_t\in \RR_{\geq 0},\ t\geq 0$
+    \item $w_{t,t}\in \RR_{\geq 0},\ t\geq 0$ and $\omega_t\in \RR_+,\ t\geq 1$
+    \item $w_{t,\tau}\in \RR_{\geq 0},\ t\geq 0, \tau=0,\ldots t$ such that $w_{t_1,\tau_1}w_{t_2,\tau_2}=w_{t_1,\tau_2}w_{t_2,\tau_1}$ and $w_{t,\tau_1}=0\Leftrightarrow  w_{t,\tau_2}=0$
+\end{enumerate}
+Given weighting scheme in one of the forms above, one can produce a sequence of weighted \emph{averages}
+for any series of conforming objects
+$\displaystyle \overline{o_{w,t}}\eq\left(\sum_{\tau=0}^t w_\tau\right)^{-1}\left(\sum_{\tau=0}^t w_\tau o_\tau\right)$
+defined for any index $t\geq t_0$ corresponding to a nonzero cumulative weight.
+If all weights are non-zero then this data can be produced using relative weights $0<r_{w,t}<1$, $t\geq 1$:
+$\displaystyle \overline{o_{w,t}}=\left(1-r_{w,t}\right)o_t+r_{w,t}\overline{o_{w,t-1}}$.
+\begin{example}[Exponential Wighted Moving Average] Fix exponential decay rate $0<\omega<1$.
+    \begin{enumerate}
+        \item $\displaystyle w_0=1,\ w_t=\frac {1-\omega}{\omega^t},\ t\geq 1$
+        \item $\displaystyle w_{0,0}=1,\ w_{t,t}=1-\omega,\ t\geq 1$ and $\omega_t=\omega,\ t\geq 1$
+        \item $\displaystyle w_{t,0}=\omega^t,\ w_{t,\tau}=\left(1-\omega\right)\omega^{t-\tau},\ \tau=1,\ldots t$
+        \item $r_{w,t}=\omega,\ t\geq 1$
+    \end{enumerate}
+\end{example}
+\begin{example}[Adaptive Exponential Wighted Moving Average] Fix exponential decay rate $0<\omega<1$.
+    \begin{enumerate}
+        \item $\displaystyle w_t=\omega^{-t},\ t\geq 0$
+        \item $\displaystyle w_{t,t}=1,\ t\geq 0$ and $\omega_t=\omega,\ t\geq 1$
+        \item $\displaystyle w_{t,\tau}=\omega^{t-\tau},\ t\geq 0,\ \tau=0,\ldots t$
+        \item $\displaystyle r_{w,t}=\frac{\omega-\omega^{t+1}}{1-\omega^{t+1}},\ t\geq 1$
+    \end{enumerate}
+\end{example}
 
 \appendix\section{``Elementary'' Proof of Gaussian Convolution}\label{appendix_gauss_conv}
 % next \section will use \appendix counter
