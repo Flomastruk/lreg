@@ -62,9 +62,20 @@
 \newcommand{\llambda}{\boldsymbol{\lambda}}
 \newcommand{\LLambda}{\boldsymbol{\Lambda}}
 \newcommand{\Var}{\boldsymbol{V}}
+\newcommand{\Xtot}{\widetilde{X}_t}
+\newcommand{\Ytot}{\widetilde{Y}_t}
+\newcommand{\Xtott}[1]{\widetilde X_{#1}}
+\newcommand{\Ytott}[1]{\widetilde Y_{#1}}
 \newcommand{\XTX}{X^TX}
 \newcommand{\XTY}{X^TY}
+\newcommand{\YTX}{Y^TX}
+\newcommand{\YTY}{Y^TY}
 \newcommand{\XTXi}{\left(X^TX\right)^{-1}}
+\newcommand{\fXTX}[1]{X_{#1}^TX_{#1}}
+\newcommand{\fXTY}[1]{X_{#1}^TY_{#1}}
+\newcommand{\fYTX}[1]{Y_{#1}^TX_{#1}}
+\newcommand{\fYTY}[1]{Y_{#1}^TY_{#1}}
+\newcommand{\fXTXi}[1]{\left(X_{#1}^TX_{#1}\right)^{-1}}
 \newcommand{\bbetahat}{\widehat{\bbeta}}
 \newcommand{\bbetatilde}{\widetilde{\bbeta}}
 \newcommand{\yhat}{\widehat{y}}
@@ -134,8 +145,8 @@ Define for convenience $\LLambda_0\eq\SSigma_0^{-1}$. Using $f(\beta\mid X, Y)\p
     \ln f(\bbeta\mid X, Y)+\const=-\left(\frac n 2 \ln{\sigma^2}+\frac n 2\ln 2\pi+\frac 1 2 \ln \SSigma_0+\frac k 2 \ln 2\pi\right)-&&\\
     -\frac 1{2\sigma^2}(Y-X\bbeta)^T(Y-X\bbeta)-\frac 1{2\sigma^2}(\bbeta-\mmu_0)^T\LLambda_0(\bbeta-\mmu_0)=&&\\
     =-\left(\frac n 2\ln{\sigma^2}+\frac n 2\ln 2\pi+\frac 1 2 \ln \SSigma_0+\frac k 2 \ln 2\pi\right)-&&\\
-    -\frac 1{2\sigma^2}\left(\bbeta^T\left(X^TX+\LLambda_0\right)\bbeta-(Y^TX+\mmu_0^T\LLambda_0)\bbeta-
-    \bbeta^T\left(\XTY+\LLambda_0\mmu_0\right)+Y^TY+\mmu_0^T\LLambda_0\mmu_0\right)&&
+    -\frac 1{2\sigma^2}\left(\bbeta^T\left(\XTX+\LLambda_0\right)\bbeta-(\YTX+\mmu_0^T\LLambda_0)\bbeta-
+    \bbeta^T\left(\XTY+\LLambda_0\mmu_0\right)+\YTY+\mmu_0^T\LLambda_0\mmu_0\right)&&
 \end{split}\end{equation*}
 It suffices to show that this expression is a quadratic form $-\frac 1 {2\sigma^2}(\bbeta-\mmu_1)^T\LLambda_1(\bbeta-\mmu_1)$
 up to an additive term independent of $\bbeta$. Here $\mmu_1$ and $\LLambda_1$ are as in \ref{posterior_mu}-\ref{posterior_mu2}.
@@ -194,12 +205,12 @@ Straightforward by substituting $\mmu_0=0$ and $\SSigma_0^{-1}=0$ in proposition
     with parameters:
     \begin{align}
         \label{posterior_sigsq}&a_1=a_0+\frac n 2&&\\
-        \label{posterior_sigsq2}&b_1=b_0+\frac 12\left(Y^TY+\mmu_0^T\SSigma_0^{-1}\mmu_0-\mmu_1^T\SSigma_1^{-1}\mmu_1\right)=
+        \label{posterior_sigsq2}&b_1=b_0+\frac 12\left(\YTY+\mmu_0^T\SSigma_0^{-1}\mmu_0-\mmu_1^T\SSigma_1^{-1}\mmu_1\right)=
         b_0+\frac 12\left(\left(Y-X\mmu_1\right)^T\left(Y-X\mmu_1\right)+\left(\mmu_1-\mmu_0\right)^T\SSigma_0^{-1}\left(\mmu_1-\mmu_0\right)\right)&&
     \end{align}
     In particular, for $\LLambda_0=0$ the increment in the update of $b_0$ is the residual sum of squares for OLS regression:
     \begin{equation*}
-        b_1=b_0+\frac 12 \left(Y^TY-Y^TX\XTXi\XTY\right)
+        b_1=b_0+\frac 12 \left(\YTY-\YTX\XTXi\XTY\right)
     \end{equation*}
 \end{proposition}
 
@@ -215,7 +226,7 @@ Straightforward by substituting $\mmu_0=0$ and $\SSigma_0^{-1}=0$ in proposition
     Assume that prior on parameters has form $\displaystyle f(\bbeta,\sigma^2)\propto\frac 1{\sigma^2}$. Then posterior distribution
     of model parameters and predictive distributions recover standard OLS formulas:
     \begin{align}
-        \label{non_inform_posterior_var_sigma2}&\widehat{\sigma^2}=\frac 1{n-k}\left(Y^TY-Y^TX\XTXi\XTY\right)&&\\
+        \label{non_inform_posterior_var_sigma2}&\widehat{\sigma^2}=\frac 1{n-k}\left(\YTY-\YTX\XTXi\XTY\right)&&\\
         \label{non_inform_posterior_var_mu}&\bbeta\sim t_{n-k}\left(\XTXi\XTY,\widehat{\sigma^2}\XTXi\right)&&\\
         \label{non_inform_posterior_var_y}&f(y\mid x, X, Y)=t_{n-k}\left(x\XTXi\XTY,\widehat{\sigma^2}\left(1+x\XTXi x^T\right)\right)&&\\
         \label{non_inform_posterior_var_y1}&f(\widehat y\mid x, X, Y)=t_{n-k}\left(x\XTXi\XTY,\widehat{\sigma^2}\ x\XTXi x^T\right)&&
@@ -223,7 +234,7 @@ Straightforward by substituting $\mmu_0=0$ and $\SSigma_0^{-1}=0$ in proposition
     More specifically, the posterior parameter distribution can be decomposed as in Proposition \ref{posterior_var} with:
     \begin{align}
         &f\left(\bbeta\mid X, Y, \sigma^2\right)=\mathcal{N}\left(\XTXi\XTY,\sigma^2\XTXi\right)&&\\
-        &f\left(\sigma^2\mid X, Y\right)=\invGamma\left(\frac{n-k}2,\frac 12 \left(Y^TY-Y^TX\XTXi\XTY\right)\right)&&
+        &f\left(\sigma^2\mid X, Y\right)=\invGamma\left(\frac{n-k}2,\frac 12 \left(\YTY-\YTX\XTXi\XTY\right)\right)&&
     \end{align}
 \end{proposition}
 \begin{lemma}\label{beta_marginal}
@@ -244,21 +255,21 @@ substituting assumptions for model distributions one gets:
 \end{split}\end{equation}
 Following the proof of Proposition \ref{posterior}, completing the squares under the exponential gives:
 \begin{equation*}\begin{split}
-    -\frac 1{2\sigma^2}&\left(\bbeta^T\LLambda_1\bbeta-\mmu_1^T\LLambda_1\bbeta-\bbeta^T\LLambda_1\mmu_1+Y^TY+\mmu_0^T\LLambda_0\mmu_0\right)=\\
-    &=-\frac 1{2\sigma^2}\left((\bbeta-\mmu_1)^T\LLambda_1(\bbeta-\mmu_1)+Y^TY+\mmu_0^T\LLambda_0\mmu_0-\mmu_1^T\LLambda_1\mmu_1\right)
+    -\frac 1{2\sigma^2}&\left(\bbeta^T\LLambda_1\bbeta-\mmu_1^T\LLambda_1\bbeta-\bbeta^T\LLambda_1\mmu_1+\YTY+\mmu_0^T\LLambda_0\mmu_0\right)=\\
+    &=-\frac 1{2\sigma^2}\left((\bbeta-\mmu_1)^T\LLambda_1(\bbeta-\mmu_1)+\YTY+\mmu_0^T\LLambda_0\mmu_0-\mmu_1^T\LLambda_1\mmu_1\right)
 \end{split}\end{equation*}
 It follows that up to a constant independent of $\bbeta$ and $\sigma^2$, the posterior $f(\bbeta,\sigma^2\mid X, Y)$ can be written as:
 \begin{equation*}
     \frac 1{\left(2\pi\sigma^2\right)^{\frac{k}2}}
     \exp\left(-\frac 1{2\sigma^2}(\bbeta-\mmu_1)^T\LLambda_1(\bbeta-\mmu_1)\right)
     \left(\sigma^2\right)^{-a_0-\frac n 2 -1}\exp\left(-\frac{1}{\sigma^2}\left(b_0+\frac 12 
-    \left(Y^TY+\mmu_0^T\LLambda_0\mmu_0-\mmu_1^T\LLambda_1\mmu_1\right)
+    \left(\YTY+\mmu_0^T\LLambda_0\mmu_0-\mmu_1^T\LLambda_1\mmu_1\right)
     \right)\right)
 \end{equation*}
 The second equality in \ref{posterior_sigsq2} follows from simple algebraic manipulations:
 \begin{equation*}\begin{split}
-    &Y^TY+\mmu_0^T\LLambda_0\mmu_0-\mmu_1^T\LLambda_1\mmu_1=
-    Y^TY+\mmu_0^T\LLambda_0\mmu_0-\left(\XTY+\LLambda_0\mmu_0\right)^T\mmu_1=
+    &\YTY+\mmu_0^T\LLambda_0\mmu_0-\mmu_1^T\LLambda_1\mmu_1=
+    \YTY+\mmu_0^T\LLambda_0\mmu_0-\left(\XTY+\LLambda_0\mmu_0\right)^T\mmu_1=
     Y^T\left(Y-X\mmu_1\right)+\mmu_0^T\LLambda_0\left(\mmu_0-\mmu_1\right)=\\
     &=\left(Y-X\mmu_1\right)^T\left(Y-X\mmu_1\right)+\mmu_1^TX^T\left(Y-X\mmu_1\right)+
     \left(\mmu_0-\mmu_1\right)^T\LLambda_0\left(\mmu_0-\mmu_1\right)+\mmu_1^T\LLambda_0\left(\mmu_0-\mmu_1\right)&&
@@ -329,17 +340,17 @@ Use $\displaystyle f(\sigma^2)=\frac 1 {\sigma^2}$ in \ref{posterior_var_pf1}:
         =\frac 1{\left(2\pi\sigma^2\right)^{\frac k 2}}&
         \exp\left(-\frac 1{2\sigma^2}\left(\left(\bbeta-\XTXi\XTY\right)^T\XTX\left(\bbeta-\XTXi\XTY\right)\right)\right)\cdot \\
         \cdot&\frac 1{\left(2\pi\sigma^2\right)^{\frac {n-k}2+1}}
-        \exp{\left(-\frac 1 {2\sigma^2}\left(Y^TY-Y^TX\XTXi\XTY \right)\right)}
+        \exp{\left(-\frac 1 {2\sigma^2}\left(\YTY-\YTX\XTXi\XTY \right)\right)}
     \end{split}
 \end{equation*}
 It follows that $f\left(\bbeta,\sigma^2\mid X,Y\right)$ has form as in Lemma \ref{beta_marginal}
-with $\displaystyle a=\frac{n-k}2$ and~$\displaystyle b=\frac 12 \left(Y^TY-Y^TX\XTXi\XTY \right)$.
+with $\displaystyle a=\frac{n-k}2$ and~$\displaystyle b=\frac 12 \left(\YTY-\YTX\XTXi\XTY \right)$.
 % leave this space
 Note that the non-informative prior is uniquely determined by the requirement that the corresponding differential form
 $\displaystyle \frac 1{\sigma^2}d\bbeta d\sigma^2$ is preserved by the action of group $\RR^k\rtimes \RR_+$.
 \end{proof}
 
-\section{Exponential Moving Average via Bayesian Linear Regression}
+\section{Moving Averages via Bayesian Linear Regression}
 \subsection{Notations}
 \begin{enumerate}
     \item Observed data $(X_t, Y_t)\in \RR^{n_t\times k}\times \RR^{n_t},\ t\geq 0$
@@ -351,7 +362,7 @@ Weighting scheme $\omega$ for a sequence of observations labelled by $t\geq 0$ i
 \begin{enumerate}
     \item $w_t\in \RR_{\geq 0},\ t\geq 0$
     \item $w_{t,t}\in \RR_{\geq 0},\ t\geq 0$ and $\omega_t\in \RR_+,\ t\geq 1$
-    \item $w_{t,\tau}\in \RR_{\geq 0},\ t\geq 0, \tau=0,\ldots t$ such that $w_{t_1,\tau_1}w_{t_2,\tau_2}=w_{t_1,\tau_2}w_{t_2,\tau_1}$ and $w_{t,\tau_1}=0\Leftrightarrow  w_{t,\tau_2}=0$
+    \item $w_{t,\tau}\in \RR_{\geq 0},\ t\geq 0, \tau=0,\ldots,t$ such that $w_{t_1,\tau_1}w_{t_2,\tau_2}=w_{t_1,\tau_2}w_{t_2,\tau_1}$ and $w_{t,\tau_1}=0\Leftrightarrow  w_{t,\tau_2}=0$
 \end{enumerate}
 Given weighting scheme in one of the forms above, one can produce a sequence of weighted \emph{averages}
 for any series of conforming objects
@@ -359,34 +370,84 @@ $\displaystyle \overline{o_{w,t}}\eq\left(\sum_{\tau=0}^t w_\tau\right)^{-1}\lef
 defined for any index $t\geq t_0$ corresponding to a nonzero cumulative weight.
 If all weights are non-zero then this data can be produced using relative weights $0<r_{w,t}<1$, $t\geq 1$:
 $\displaystyle \overline{o_{w,t}}=\left(1-r_{w,t}\right)o_t+r_{w,t}\overline{o_{w,t-1}}$.
-\begin{example}[Exponential Weighted Moving Average] Fix exponential decay rate $0<\omega<1$.
-    \begin{enumerate}
-        \item $\displaystyle w_0=1,\ w_t=\frac {1-\omega}{\omega^t},\ t\geq 1$
-        \item $\displaystyle w_{0,0}=1,\ w_{t,t}=1-\omega,\ t\geq 1$ and $\omega_t=\omega,\ t\geq 1$
-        \item $\displaystyle w_{t,0}=\omega^t,\ w_{t,\tau}=\left(1-\omega\right)\omega^{t-\tau},\ \tau=1,\ldots t$
-        \item $r_{w,t}=\omega,\ t\geq 1$
-    \end{enumerate}
+\begin{example}[Exponential Weighted Moving Average]\label{ewmawt} Fix exponential decay rate $0<\omega<1$.
+\begin{enumerate}
+    \item $\displaystyle w_0=1,\ w_t=\frac {1-\omega}{\omega^t},\ t\geq 1$
+    \item $\displaystyle w_{0,0}=\frac 1{1-\omega},\ w_{t,t}=1,\ t\geq 1$ and $\omega_t=\omega,\ t\geq 1$
+    \item $\displaystyle w_{t,0}=\frac{\omega^t}{1-\omega},\ w_{t,\tau}=\omega^{t-\tau},\ \tau=1,\ldots,t$
+    \item $r_{w,t}=\omega,\ t\geq 1$
+\end{enumerate}
 \end{example}
-\begin{example}[Adaptive Exponential Weighted Moving Average] Fix exponential decay rate $0<\omega<1$.
-    \begin{enumerate}
-        \item $\displaystyle w_t=\omega^{-t},\ t\geq 0$
-        \item $\displaystyle w_{t,t}=1,\ t\geq 0$ and $\omega_t=\omega,\ t\geq 1$
-        \item $\displaystyle w_{t,\tau}=\omega^{t-\tau},\ t\geq 0,\ \tau=0,\ldots t$
-        \item $\displaystyle r_{w,t}=\frac{\omega-\omega^{t+1}}{1-\omega^{t+1}},\ t\geq 1$
-    \end{enumerate}
+\begin{example}[Adaptive Exponential Weighted Moving Average]\label{aewmawt} Fix exponential decay rate $0<\omega<1$.
+\begin{enumerate}
+    \item $\displaystyle w_t=\omega^{-t},\ t\geq 0$
+    \item $\displaystyle w_{t,t}=1,\ t\geq 0$ and $\omega_t=\omega,\ t\geq 1$
+    \item $\displaystyle w_{t,\tau}=\omega^{t-\tau},\ t\geq 0,\ \tau=0,\ldots,t$
+    \item $\displaystyle r_{w,t}=\frac{\omega-\omega^{t+1}}{1-\omega^{t+1}},\ t\geq 1$
+\end{enumerate}
 \end{example}
-\begin{proposition}
-    Consider a weighting scheme in the format $w_{t,t}\in\RR_{\geq 0},\ t\geq 0$ and $\omega_t\in \RR_+,\ t\geq 1$
-    with $w_{t,t}=1,\ \forall t>0$.
-    Assume that before observing $(X_t, Y_t),\ t>0$, the prior ``decays'' based on the rule:
-    \begin{align}\displaystyle
-        &\SSigma_{t-1}^{-1}\rightarrow \omega\SSigma_{t-1}^{-1}\\
-        &a_{t-1}\rightarrow \omega a_{t-1}\\
-        &b_{t-1}\rightarrow \omega b_{t-1}
-    \end{align}
-    and assume that the initial prior is given by parameters... TODO
+\subsection{Results}
+\begin{proposition}\label{weightingbayes}
+Consider a weighting scheme $w_{t,t}\in\RR_{\geq 0},\ t\geq 0$ and $\omega_t\in \RR_+,\ t\geq 1$
+with $w_{t,t}=1,\ \forall t>0$.
+Assume that the prior ``decays'' according to the rule
+$\left(\mmu_{t-1},\SSigma_{t-1},a_{t-1},b_{t-1}\right)\rightarrow \left(\mmu_{t-1},\omega_t \SSigma_{t-1},\omega_t a_{t-1},\omega_t b_{t-1}\right)$,
+and assume that the initial prior $\left(\mmu_0,\LLambda_0, a_0, b_0\right)$ is given by parameters:
+\begin{align}\displaystyle
+    &\SSigma_0=w_{0,0}\fXTXi{0}\\
+    &\mmu_0=\fXTXi{0}\fXTY{0}\\
+    &a_0=\frac 12w_{0,0}\\
+    &b_0=\frac 12\left(Y_0^TY_0-Y_0^TX_0\fXTXi{0}\fXTY{0}\right)
+\end{align}
+Then for any $t>0$ the posterior equals:
+\begin{align}\displaystyle
+    \label{posterior_vart}&\SSigma_t^{-1}=\sum_{\tau=0}^t w_{t,\tau}\fXTX{\tau}&&\\
+    \label{posterior_mut}&\mmu_t=\SSigma_t\sum_{\tau=0}^t w_{t,\tau}\fXTY{\tau}&&\\
+    \label{posterior_at}&a_t=\frac 12\sum_{\tau=0}^t w_{t,\tau}&&\\
+    \label{posterior_bt}&b_t=\frac 12\sum_{\tau=0}^t w_{t,\tau}\left(\fYTY{\tau}-\mmu_t^T\fXTX{\tau}\mmu_t\right)=
+    \frac 12\sum_{\tau=0}^t w_{t,\tau}\left(Y_\tau-X_\tau\mmu_t\right)^T\left(Y_\tau-X_\tau\mmu_t\right)&&
+\end{align}
 \end{proposition}
-Caveat... 
+\begin{corollary}[Univariate Moving Averages via Bayesian Regression]
+Consider the case with $k=1,\ n_t=1,\ t\geq0$ and weigting scheme as in Examples \ref{ewmawt}, \ref{aewmawt}.
+Assume that $X_t\in\RR^{1\times 1}$ is constant $1$ for each $t\geq 0$ and denote the only entry of $Y_t\in \RR^1$ by $y_t$.
+Then formulas of Proposition \ref{weightingbayes} reduce to:
+\begin{align}\displaystyle
+    &\SSigma_t^{-1}=\sum_{\tau=0}^t w_{t,\tau}\\
+    &\mmu_t=\overline{y_{w,t}}\\
+    &a_t=\frac 12\sum_{\tau=0}^t w_{t,\tau}\\
+    &b_t=\frac 12\sum_{\tau=0}^t w_{t,\tau}\left(y_\tau-\overline{y_{w,t}}\right)^2
+\end{align}
+\end{corollary}
+\begin{proof}[Proof of Proposition \ref{weightingbayes}]
+Assumptions on weighting scheme imply $\left(w_{t,0},w_{t,1},\ldots,w_{t,t}\right)=\left(\omega_t w_{t-1,0},\ldots,\omega_t w_{t-1,t-1},1\right)$.
+Formulas \ref{posterior_vart}-\ref{posterior_at} follow immediately from Proposition \ref{posterior_var} and the decay rule for the prior.
+
+To show \ref{posterior_bt}, define weighting matrices
+$\displaystyle\Omega_t=\operatorname{diag}\left(\underbrace{w_{t,0},\ldots,w_{t,0}}_{n_0},\ldots,\underbrace{w_{t,t},\ldots,w_{t,t}}_{n_t}\right)
+\in\RR^{\left(\sum_{\tau=0}^t n_\tau\right)^2}$ and define ``stacked'' matrices $\Xtot=\left(X_0^T,\ldots,X_\tau^T\right)^T\in\RR^{\left(\sum_{\tau=0}^t n_\tau\right)\times k}$
+and $\Ytot=\left(Y_0,\ldots,Y_\tau\right)\in\RR^{\left(\sum_{\tau=0}^t n_\tau\right)}$.
+Using \ref{posterior_sigsq2} the induction step requires to prove:
+\begin{equation*}\begin{split}
+    \left(\Ytot-\Xtot\mmu_t\right)^T\Omega_t\left(\Ytot-\Xtot\mmu_t\right)&=
+    \omega_t\left(\Ytott{t-1}-\Xtott{t-1}\mmu_{t-1}\right)^T\Omega_{t-1}\left(\Ytott{t-1}-\Xtott{t-1}\mmu_{t-1}\right)+\\
+    +&\left(Y_t-X_t\mmu_t\right)^T\left(Y_t-X_t\mmu_t\right)+
+    \omega_t\left(\mmu_t-\mmu_{t-1}\right)^T\Xtott{t-1}^T\Omega_{t-1}\Xtott{t-1}\left(\mmu_t-\mmu_{t-1}\right)
+\end{split}\end{equation*}
+This can be readily rewritten as:
+\begin{equation*}\begin{split}
+    \left(\Ytott{t-1}-\Xtott{t-1}\mmu_t\right)^T\Omega_{t-1}\left(\Ytott{t-1}-\Xtott{t-1}\mmu_t\right)&=\\
+    =\left(\Ytott{t-1}-\Xtott{t-1}\mmu_{t-1}\right)^T\Omega_{t-1}&\left(\Ytott{t-1}-\Xtott{t-1}\mmu_{t-1}\right)+
+    \left(\mmu_t-\mmu_{t-1}\right)^T\Xtott{t-1}^T\Omega_{t-1}\Xtott{t-1}\left(\mmu_t-\mmu_{t-1}\right)    
+\end{split}\end{equation*}
+The identity follows from noticing that the ``cross term''
+$\left(\Ytott{t-1}-\Xtott{t-1}\mmu_{t-1}\right)^T\Omega_{t-1}\Xtott{t-1}\left(\mmu_t-\mmu_{t-1}\right)$ is zero:
+\begin{equation*}\begin{split}
+    \left(\Ytott{t-1}-\Xtott{t-1}\mmu_{t-1}\right)^T&\Omega_{t-1}\Xtott{t-1}\left(\mmu_t-\mmu_{t-1}\right)=\\
+    =&\left(\Ytott{t-1}-\Xtott{t-1}\left(\Xtott{t-1}^T\Omega_{t-1}\Xtott{t-1}\right)^{-1}\Xtott{t-1}\Omega_{t-1}\Ytott{t-1}\right)^T\Omega_{t-1}\Xtott{t-1}\left(\mmu_t-\mmu_{t-1}\right)=\\
+    &=\left(\Xtott{t-1}\Omega_{t-1}\Ytott{t-1}-\Xtott{t-1}\Omega_{t-1}\Ytott{t-1}\right)^T\left(\mmu_t-\mmu_{t-1}\right)=0
+\end{split}\end{equation*}
+\end{proof}
 
 \appendix\section{``Elementary'' Proof of Gaussian Convolution}\label{appendix_gauss_conv}
 % next \section will use \appendix counter
@@ -394,7 +455,7 @@ Caveat...
     Let $\bbeta\in\RR^k$ be a Gaussian vector with distribution $\mathcal{N}(\mmu,\SSigma)$ and let $A$ be any $l\times k$ matrix.
     Then $A\bbeta\in\RR^k$ is a Gaussian vector with distribution $\mathcal{N}(A\mmu,A\SSigma A^T)$
 \end{proposition}
-\begin{proof} We only consider the case $l=1$ with $A=a=(a_1, a_2,\ldots, a_k)$ and $A\bbeta$ is a one dimensional random variable.
+\begin{proof} We only consider the case $l=1$ with $A=a=(a_1,a_2,\ldots,a_k)$ and $A\bbeta$ is a one dimensional random variable.
 Without loss of generality we may assume $a_1\neq 0$. Introduce notations:
 \begin{align}
     &\yhat = a\bbeta\\
