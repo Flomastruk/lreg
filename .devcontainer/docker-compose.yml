@@ -1,5 +1,5 @@
 services:
-  custom_service:
+  lreg_service:
     # image: python:3.12-bookworm
     build:
       context: ../
@@ -13,5 +13,8 @@ services:
       - ../:/workspace
       # this mirrors volume defined in top-level `volumes` section
       - data:/data
+      # persists Claude Code memory/settings/credentials across rebuilds
+      - claude-config:/home/${USER}/.claude
 volumes:
   data:
+  claude-config:

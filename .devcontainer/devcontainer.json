@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/python
 {
-	"name": "Sample Project Template",
+	"name": "Linear Regressions",
 	// Option 1. Use a published image
 	// "image": "flomastruk/vsc-test",
 	// "image": "python:3.12-bookworm",
@@ -14,7 +14,7 @@
 	// },
 	
 	// Option 3. Use Docker Compose
-	"service": "custom_service",
+	"service": "lreg_service",
 	// workspace folder is mirroring 
 	"workspaceFolder":"/workspace/",
 	"dockerComposeFile": "docker-compose.yml",
@@ -24,12 +24,12 @@
 			"extensions": [
 				"james-yu.latex-workshop",
 				// "valentjn.vscode-ltex",
+				"ms-python.vscode-pylance",
 				"ms-python.python",
-				"ms-python.pylint",
-				"ms-python.black-formatter",
+				// "ms-toolsai.datawrangler",
 				"ms-toolsai.jupyter",
 				"ms-toolsai.jupyter-keymap",
-				"ms-toolsai.jupyter-renderers"
+				"ms-toolsai.jupyter-renderers",
 			]
 		}
 	},
@@ -37,7 +37,19 @@
 	// "runArgs": ["--name", "vsc-test"],
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
+	"features": {
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"username": "${localEnv:USER}",
+			"upgradePackages": false,
+			"installZsh": false,
+			"installOhMyZsh": false
+		},
+		"ghcr.io/devcontainers/features/node:2.1.0": {},
+		"ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
+		"./features/npm-group-write": {},
+	},
+
+	"remoteUser": "${localEnv:USER}",
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],

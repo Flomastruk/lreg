@@ -1,8 +1,8 @@
 FROM python:3.12-bookworm
 
-RUN apt-get update
+WORKDIR /workspace
 
-# RUN apt-get install --no-install-recommends -y git procps
+RUN apt-get update
 
 # Install Tex Live
 RUN apt-get update && apt-get -y upgrade \
@@ -32,8 +32,11 @@ ENV DEBIAN_FRONTEND=dialog \
     LANG=C.UTF-8 \
     LC_ALL=C.UTF-8
 
-RUN pip install --upgrade pip
 
-COPY ../reqs/requirements.txt reqs/
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/
 
-RUN pip install -r reqs/requirements.txt
+COPY pyproject.toml ./
+
+ENV UV_PROJECT_ENVIRONMENT=/opt/venv
+
+RUN uv sync --no-dev --no-cache && chmod -R a+w /opt/venv
